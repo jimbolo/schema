@@ -575,9 +575,9 @@ Key services explicitly listed under **561499** that match your business:
 
 ## Schema.org Resources
 
-- **Official Documentation**: https://schema.org/docs/schemas.html
-- **Google Rich Results Test**: https://search.google.com/test/rich-results
-- **Schema Markup Validator**: https://validator.schema.org/
-- **Local Business Guidelines**: https://developers.google.com/search/docs/appearance/structured-data/local-business
+- **Official Documentation**: `https://schema.org/docs/schemas.html`
+- **Google Rich Results Test**: `https://search.google.com/test/rich-results`
+- **Schema Markup Validator**: `https://validator.schema.org/`
+- **Local Business Guidelines**: `https://developers.google.com/search/docs/appearance/structured-data/local-business`
 
 This implementation represents a comprehensive approach to Schema.org markup for virtual address services, optimized for both traditional SEO and emerging AI search technologies.
