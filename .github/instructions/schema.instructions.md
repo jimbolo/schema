@@ -3,7 +3,8 @@
 **Project:** Schema.org JSON-LD Implementation  
 **Version:** 2025.1  
 **Last Updated:** August 20, 2025  
-**Apply To:** `**/*.{json,jsonld}`  
+**Apply To:** `**/*.{json,jsonld}` 
+**Ignore:** files listed in `**/*.{ignore}`
 
 ---
 

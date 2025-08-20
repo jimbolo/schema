@@ -103,6 +103,7 @@
 
   "areaServed": [
     {
+      "_comment": "Primary service location - most specific",
       "@type": "City",
       "name": "Los Angeles",
       "sameAs": "https://en.wikipedia.org/wiki/Los_Angeles",
@@ -113,6 +114,7 @@
       }
     },
     {
+      "_comment": "High-value premium markets - complete containedInPlace for disambiguation",
       "@type": "City",
       "name": "Beverly Hills",
       "sameAs": "https://en.wikipedia.org/wiki/Beverly_Hills,_California",
@@ -140,6 +142,7 @@
       }
     },
     {
+      "_comment": "Secondary markets - still specific but grouped",
       "@type": "City",
       "name": "Culver City",
       "sameAs": "https://en.wikipedia.org/wiki/Culver_City,_California",
@@ -176,6 +179,7 @@
       }
     },
     {
+      "_comment": "Regional area - broader targeting",
       "@type": "AdministrativeArea",
       "name": "San Fernando Valley",
       "sameAs": "https://en.wikipedia.org/wiki/San_Fernando_Valley",
@@ -194,6 +198,7 @@
       }
     },
     {
+      "_comment": "Geographic radius for comprehensive coverage",
       "@type": "GeoCircle",
       "name": "Greater Los Angeles Metropolitan Area Service Zone",
       "description": "50km radius covering all major LA metro cities and business districts",
@@ -208,7 +213,8 @@
           "addressCountry": "US"
         }
       },
-      "geoRadius": "50000"
+      "geoRadius": "50000",
+      "_radiusNote": "50km = ~31 miles, covers entire Greater LA area"
     }
   ],
 
@@ -323,7 +329,7 @@
         "serviceOutput": [
           {
             "@type": "DigitalDocument",
-            "name": "24/7 Postal Mail Management",
+            "name": "24/7 PPostal Mail Management",
             "description": "You can access your mailbox 24/7 and see photos of envelopes and packages. You're always in control, decide when to open and scan emails and when to forward, shred or recycle them."
           },
           {
@@ -506,7 +512,7 @@
       "actionPlatform": [
         "http://schema.org/DesktopWebPlatform",
         "https://schema.org/GenericWebPlatform",
-        "https://schema.org/AndroidPlatform",
+        "hhttps://schema.org/AndroidPlatform",
         "https://schema.org/IOSPlatform",
         "http://schema.org/MobileWebPlatform"
       ]

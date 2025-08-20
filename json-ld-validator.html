@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON-LD Schema Validator</title>
+    <!-- Multiple CDN sources for jsonld.js with fallback handling -->
+    <script>
+        // Track loading attempts
+        window.jsonldLoadAttempts = 0;
+        window.jsonldLoaded = false;
+        
+        // Function to load script with fallback
+        function loadJsonLdScript(src, isLastAttempt = false) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = function() {
+                    if (typeof jsonld !== 'undefined') {
+                        window.jsonldLoaded = true;
+                        console.log('jsonld.js loaded successfully from:', src);
+                        resolve();
+                    } else {
+                        reject(new Error('jsonld object not available after script load'));
+                    }
+                };
+                script.onerror = function() {
+                    console.warn('Failed to load jsonld.js from:', src);
+                    reject(new Error('Script load failed'));
+                };
+                document.head.appendChild(script);
+                
+                // Timeout fallback
+                setTimeout(() => {
+                    if (!window.jsonldLoaded) {
+                        reject(new Error('Script load timeout'));
+                    }
+                }, isLastAttempt ? 10000 : 5000);
+            });
+        }
+        
+        // Try multiple CDN sources
+        async function loadJsonLdLibrary() {
+            const cdnSources = [
+                'https://cdn.jsdelivr.net/npm/jsonld@8.3.3/dist/jsonld.min.js',
+                'https://unpkg.com/jsonld@8.3.3/dist/jsonld.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/jsonld/8.3.3/jsonld.min.js'
+            ];
+            
+            for (let i = 0; i < cdnSources.length; i++) {
+                try {
+                    window.jsonldLoadAttempts++;
+                    console.log(`Attempting to load jsonld.js from CDN ${i + 1}/${cdnSources.length}: ${cdnSources[i]}`);
+                    await loadJsonLdScript(cdnSources[i], i === cdnSources.length - 1);
+                    break; // Success - exit loop
+                } catch (error) {
+                    console.warn(`CDN ${i + 1} failed:`, error.message);
+                    if (i === cdnSources.length - 1) {
+                        console.error('All CDN sources failed to load jsonld.js');
+                        window.jsonldLoadFailed = true;
+                    }
+                }
+            }
+        }
+        
+        // Start loading immediately
+        loadJsonLdLibrary();
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .validation-section {
+            margin-bottom: 30px;
+        }
+        
+        .validation-section h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .file-input-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .file-input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            color: #27ae60;
+            background: #d5f4e6;
+            border-color: #27ae60;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #ffeaa7;
+            border-color: #e74c3c;
+        }
+        
+        .warning {
+            color: #f39c12;
+            background: #fff3cd;
+            border-color: #f39c12;
+        }
+        
+        .info {
+            color: #3498db;
+            background: #e3f2fd;
+            border-color: #3498db;
+        }
+        
+        .validation-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+        
+        .validation-item.pass {
+            background: #d5f4e6;
+            border-left-color: #27ae60;
+        }
+        
+        .validation-item.fail {
+            background: #ffeaa7;
+            border-left-color: #e74c3c;
+        }
+        
+        .validation-summary {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .json-preview {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .progress {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #27ae60);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 JSON-LD Schema Validator</h1>
+        <p style="text-align: center; color: #7f8c8d;">
+            Comprehensive validation for LocalBusiness Schema.org JSON-LD files with official Schema.org rules
+        </p>
+        
+        <div class="validation-section">
+            <h2>📁 Load JSON-LD File</h2>
+            <div class="file-input-section">
+                <label for="jsonFile">Select your JSON-LD file:</label>
+                <input type="file" id="jsonFile" accept=".json,.jsonld" />
+                <p style="margin-top: 10px; color: #7f8c8d; font-size: 14px;">
+                    Or use the default LocalBusiness-registredAgent.json file in this directory
+                </p>
+            </div>
+            
+            <div class="buttons">
+                <button onclick="loadDefaultFile()">Load Default File</button>
+                <button onclick="validateLoadedFile()" id="validateBtn" disabled>Validate JSON-LD</button>
+                <button onclick="clearResults()">Clear Results</button>
+            </div>
+        </div>
+
+        <div class="progress" id="progressSection" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText" style="text-align: center; margin-top: 5px;">Starting validation...</p>
+        </div>
+
+        <div id="results" class="results" style="display: none;"></div>
+    </div>
+
+    <script>
+        let currentJsonLd = null;
+        
+        // File input handler
+        document.getElementById('jsonFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        currentJsonLd = JSON.parse(e.target.result);
+                        
+                        // Enable appropriate validation based on library availability
+                        if (typeof jsonld !== 'undefined') {
+                            document.getElementById('validateBtn').disabled = false;
+                            showMessage('success', `✅ File loaded successfully: ${file.name}`);
+                        } else {
+                            showMessage('warning', `⚠️ File loaded: ${file.name}. JSON-LD library not available - only basic validation possible.`);
+                        }
+                    } catch (error) {
+                        showMessage('error', `❌ Invalid JSON file: ${error.message}`);
+                        document.getElementById('validateBtn').disabled = true;
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Load default file
+        async function loadDefaultFile() {
+            try {
+                showProgress(10, 'Loading default file...');
+                const response = await fetch('./LocalBusiness-registredAgent.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                currentJsonLd = await response.json();
+                
+                // Enable appropriate validation button based on library availability
+                if (typeof jsonld !== 'undefined') {
+                    document.getElementById('validateBtn').disabled = false;
+                    showProgress(100, 'Default file loaded successfully!');
+                    showMessage('success', '✅ Default LocalBusiness-registredAgent.json loaded successfully');
+                } else {
+                    showProgress(100, 'Default file loaded - Basic validation available');
+                    showMessage('warning', '⚠️ Default file loaded. JSON-LD library not available - only basic validation possible.');
+                }
+                
+                setTimeout(() => hideProgress(), 1000);
+                
+            } catch (error) {
+                hideProgress();
+                showMessage('error', `❌ Could not load default file: ${error.message}`);
+                console.error('Load error:', error);
+            }
+        }
+
+        // Main validation function
+        async function validateLoadedFile() {
+            if (!currentJsonLd) {
+                showMessage('error', '❌ No JSON-LD file loaded');
+                return;
+            }
+
+            // Check if jsonld library is loaded
+            if (typeof jsonld === 'undefined') {
+                showMessage('error', '❌ JSON-LD library not loaded. Please refresh the page and try again.');
+                return;
+            }
+
+            showProgress(0, 'Starting validation...');
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = '<h3>🔍 Validation in Progress...</h3>';
+
+            const validationResults = {
+                basicStructure: false,
+                schemaCompliance: false,
+                nestedObjects: false,
+                dataTypes: false,
+                contextValidation: false,
+                commentFields: false,
+                schemaOrgCompliance: false,
+                errors: [],
+                warnings: [],
+                details: []
+            };
+
+            try {
+                // 1. Basic Structure Validation
+                showProgress(20, 'Validating basic JSON-LD structure...');
+                validationResults.basicStructure = await validateBasicStructure(currentJsonLd, validationResults);
+                
+                // 2. Context Validation
+                showProgress(40, 'Validating @context...');
+                validationResults.contextValidation = await validateContext(currentJsonLd, validationResults);
+                
+                // 3. Schema.org Compliance
+                showProgress(60, 'Checking Schema.org compliance...');
+                validationResults.schemaCompliance = await validateSchemaCompliance(currentJsonLd, validationResults);
+                
+                // 4. Nested Objects
+                showProgress(80, 'Validating nested objects...');
+                validationResults.nestedObjects = await validateNestedObjects(currentJsonLd, validationResults);
+                
+                // 5. Data Types
+                showProgress(90, 'Validating data types...');
+                validationResults.dataTypes = validateDataTypes(currentJsonLd, validationResults);
+                
+                // 6. Comment Fields Check
+                showProgress(95, 'Checking for comment fields...');
+                validationResults.commentFields = validateCommentFields(currentJsonLd, validationResults);
+                
+                // 7. Comprehensive Schema.org Validation
+                showProgress(98, 'Validating Schema.org compliance...');
+                validationResults.schemaOrgCompliance = validateSchemaOrgCompliance(currentJsonLd, validationResults);
+                
+                showProgress(100, 'Validation complete!');
+                setTimeout(() => hideProgress(), 1000);
+                
+                // Display results
+                displayValidationResults(validationResults);
+                
+            } catch (error) {
+                hideProgress();
+                validationResults.errors.push(`Validation process failed: ${error.message}`);
+                if (error.stack) {
+                    console.error('Full error details:', error);
+                }
+                displayValidationResults(validationResults);
+            }
+        }
+
+        // Basic structure validation
+        async function validateBasicStructure(jsonldDoc, results) {
+            try {
+                // Check if it's valid JSON-LD by expanding
+                const expanded = await jsonld.expand(jsonldDoc);
+                results.details.push('✅ Valid JSON-LD document structure');
+                
+                // Check required properties
+                const requiredProps = ['@context', '@type', '@id'];
+                for (const prop of requiredProps) {
+                    if (!jsonldDoc[prop]) {
+                        results.errors.push(`Missing required property: ${prop}`);
+                        return false;
+                    }
+                }
+                
+                results.details.push('✅ All required root properties present (@context, @type, @id)');
+                
+                // Check @type is LocalBusiness
+                if (jsonldDoc['@type'] !== 'LocalBusiness') {
+                    results.warnings.push(`Expected @type 'LocalBusiness', found '${jsonldDoc['@type']}'`);
+                }
+                
+                return true;
+            } catch (error) {
+                results.errors.push(`JSON-LD structure invalid: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Context validation
+        async function validateContext(jsonldDoc, results) {
+            try {
+                const expectedContext = 'https://schema.org';
+                if (jsonldDoc['@context'] !== expectedContext) {
+                    results.errors.push(`Context must be exactly "${expectedContext}", found "${jsonldDoc['@context']}"`);
+                    return false;
+                }
+                
+                // Test context resolution by expanding with explicit context
+                try {
+                    const testDoc = {
+                        '@context': expectedContext,
+                        '@type': 'Thing',
+                        'name': 'test'
+                    };
+                    await jsonld.expand(testDoc);
+                    results.details.push('✅ Schema.org context valid and accessible');
+                } catch (contextError) {
+                    results.errors.push(`Context resolution failed: ${contextError.message}`);
+                    return false;
+                }
+                
+                return true;
+            } catch (error) {
+                results.errors.push(`Context validation failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Schema compliance validation
+        async function validateSchemaCompliance(jsonldDoc, results) {
+            try {
+                // First try to expand the document (this validates all properties)
+                const expanded = await jsonld.expand(jsonldDoc);
+                results.details.push('✅ All properties valid in Schema.org vocabulary');
+                
+                // Then try to compact against schema.org context
+                try {
+                    const compacted = await jsonld.compact(jsonldDoc, 'https://schema.org');
+                    results.details.push('✅ Successfully compacted against Schema.org context');
+                } catch (compactError) {
+                    // Compaction failure is less critical than expansion failure
+                    results.warnings.push(`Compaction warning: ${compactError.message}`);
+                }
+                
+                return true;
+            } catch (error) {
+                results.errors.push(`Schema.org compliance failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Nested objects validation
+        async function validateNestedObjects(jsonldDoc, results) {
+            const errors = [];
+            let objectCount = 0;
+            
+            // Check address structure
+            if (jsonldDoc.address) {
+                objectCount++;
+                if (!jsonldDoc.address['@type']) {
+                    errors.push('Address missing @type');
+                } else if (jsonldDoc.address['@type'] !== 'PostalAddress') {
+                    errors.push(`Address @type should be 'PostalAddress', found '${jsonldDoc.address['@type']}'`);
+                }
+            }
+            
+            // Check contactPoint array
+            if (jsonldDoc.contactPoint && Array.isArray(jsonldDoc.contactPoint)) {
+                jsonldDoc.contactPoint.forEach((contact, index) => {
+                    objectCount++;
+                    if (!contact['@type']) {
+                        errors.push(`ContactPoint[${index}] missing @type`);
+                    } else if (contact['@type'] !== 'ContactPoint') {
+                        errors.push(`ContactPoint[${index}] @type should be 'ContactPoint'`);
+                    }
+                });
+            }
+            
+            // Check makesOffer array
+            if (jsonldDoc.makesOffer && Array.isArray(jsonldDoc.makesOffer)) {
+                jsonldDoc.makesOffer.forEach((offer, index) => {
+                    objectCount++;
+                    if (!offer['@type']) {
+                        errors.push(`Offer[${index}] missing @type`);
+                    } else if (offer['@type'] !== 'Offer') {
+                        errors.push(`Offer[${index}] @type should be 'Offer'`);
+                    }
+                    
+                    // Check nested itemOffered
+                    if (offer.itemOffered && !offer.itemOffered['@type']) {
+                        errors.push(`Offer[${index}].itemOffered missing @type`);
+                    }
+                });
+            }
+            
+            // Check geo coordinates
+            if (jsonldDoc.geo) {
+                objectCount++;
+                if (!jsonldDoc.geo['@type']) {
+                    errors.push('Geo coordinates missing @type');
+                } else if (jsonldDoc.geo['@type'] !== 'GeoCoordinates') {
+                    errors.push(`Geo @type should be 'GeoCoordinates'`);
+                }
+            }
+            
+            if (errors.length > 0) {
+                results.errors.push(...errors);
+                return false;
+            }
+            
+            results.details.push(`✅ All ${objectCount} nested objects have valid @type declarations`);
+            return true;
+        }
+
+        // Data types validation
+        function validateDataTypes(jsonldDoc, results) {
+            const errors = [];
+            let checksPerformed = 0;
+            
+            // Validate email format
+            if (jsonldDoc.email) {
+                checksPerformed++;
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(jsonldDoc.email)) {
+                    errors.push(`Invalid email format: ${jsonldDoc.email}`);
+                }
+            }
+            
+            // Validate phone format
+            if (jsonldDoc.telephone) {
+                checksPerformed++;
+                if (!/^\+\d{11,15}$/.test(jsonldDoc.telephone)) {
+                    errors.push(`Invalid telephone format: ${jsonldDoc.telephone} (should be +1234567890)`);
+                }
+            }
+            
+            // Validate coordinates
+            if (jsonldDoc.geo && jsonldDoc.geo.latitude && jsonldDoc.geo.longitude) {
+                checksPerformed++;
+                const lat = parseFloat(jsonldDoc.geo.latitude);
+                const lng = parseFloat(jsonldDoc.geo.longitude);
+                if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                    errors.push(`Invalid geographic coordinates: lat=${lat}, lng=${lng}`);
+                }
+            }
+            
+            // Validate URLs
+            const urlFields = ['url', 'image', 'logo'];
+            urlFields.forEach(field => {
+                if (jsonldDoc[field]) {
+                    checksPerformed++;
+                    try {
+                        new URL(jsonldDoc[field]);
+                    } catch (e) {
+                        errors.push(`Invalid URL in ${field}: ${jsonldDoc[field]}`);
+                    }
+                }
+            });
+            
+            // Validate NAICS code
+            if (jsonldDoc.naics) {
+                checksPerformed++;
+                if (!/^\d{6}$/.test(jsonldDoc.naics)) {
+                    errors.push(`Invalid NAICS code format: ${jsonldDoc.naics} (should be 6 digits)`);
+                }
+            }
+            
+            if (errors.length > 0) {
+                results.errors.push(...errors);
+                return false;
+            }
+            
+            results.details.push(`✅ All ${checksPerformed} data type validations passed`);
+            return true;
+        }
+
+        // Comment fields validation
+        function validateCommentFields(jsonldDoc, results) {
+            const commentFields = [];
+            let totalComments = 0;
+            
+            // Recursive function to find all _comment fields
+            function findComments(obj, path = '') {
+                if (typeof obj !== 'object' || obj === null) return;
+                
+                if (Array.isArray(obj)) {
+                    obj.forEach((item, index) => {
+                        findComments(item, `${path}[${index}]`);
+                    });
+                } else {
+                    Object.keys(obj).forEach(key => {
+                        const currentPath = path ? `${path}.${key}` : key;
+                        
+                        if (key === '_comment') {
+                            totalComments++;
+                            commentFields.push({
+                                path: currentPath,
+                                value: obj[key]
+                            });
+                        } else {
+                            findComments(obj[key], currentPath);
+                        }
+                    });
+                }
+            }
+            
+            findComments(jsonldDoc);
+            
+            if (totalComments > 0) {
+                results.warnings.push(`Found ${totalComments} _comment field(s) - these are not part of JSON-LD/Schema.org specification`);
+                results.details.push(`⚠️ Comment fields detected: ${totalComments} instances found`);
+                
+                // Add details about each comment field location
+                commentFields.forEach((comment, index) => {
+                    if (index < 5) { // Show first 5 for brevity
+                        results.details.push(`   • ${comment.path}: "${comment.value.substring(0, 50)}${comment.value.length > 50 ? '...' : ''}"`);
+                    }
+                });
+                
+                if (commentFields.length > 5) {
+                    results.details.push(`   • ... and ${commentFields.length - 5} more comment fields`);
+                }
+                
+                return false; // Technically not valid JSON-LD
+            }
+            
+            results.details.push('✅ No comment fields found - clean JSON-LD structure');
+            return true;
+        }
+
+        // Comprehensive Schema.org LocalBusiness validation
+        function validateSchemaOrgCompliance(jsonldDoc, results) {
+            const errors = [];
+            const warnings = [];
+            const details = [];
+            
+            // LocalBusiness required properties per Schema.org
+            const requiredProperties = ['@context', '@type', 'name'];
+            const recommendedProperties = ['address', 'telephone', '@id'];
+            
+            // LocalBusiness specific property validation
+            const localBusinessValidation = {
+                // Currency validation (ISO 4217)
+                currenciesAccepted: (value) => {
+                    if (typeof value === 'string') {
+                        const validCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'BTC', 'ETH'];
+                        return validCurrencies.includes(value) || /^[A-Z]{3}$/.test(value);
+                    }
+                    return false;
+                },
+                
+                // Opening hours format validation
+                openingHours: (value) => {
+                    if (typeof value === 'string') {
+                        // Format: Mo,Tu,We,Th,Fr,Sa,Su 09:00-17:00
+                        return /^(Mo|Tu|We|Th|Fr|Sa|Su)(,(Mo|Tu|We|Th|Fr|Sa|Su))* \d{2}:\d{2}-\d{2}:\d{2}$/.test(value) ||
+                               /^Mo-Su$/.test(value);
+                    }
+                    return false;
+                },
+                
+                // Payment methods validation
+                paymentAccepted: (value) => {
+                    if (Array.isArray(value)) {
+                        const validPayments = ['Cash', 'Credit Card', 'Debit Card', 'PayPal', 'Apple Pay', 'Google Pay', 'Cryptocurrency', 'Check', 'Money Order'];
+                        return value.every(payment => validPayments.includes(payment));
+                    }
+                    return typeof value === 'string';
+                },
+                
+                // Price range validation
+                priceRange: (value) => {
+                    if (typeof value === 'string') {
+                        return /^[\$£€¥₹][\$£€¥₹]?[\$£€¥₹]?[\$£€¥₹]?$/.test(value);
+                    }
+                    return false;
+                },
+                
+                // DUNS validation (9 digits)
+                duns: (value) => /^\d{9}$/.test(value),
+                
+                // NAICS validation (6 digits)
+                naics: (value) => /^\d{6}$/.test(value),
+                
+                // LEI Code validation (20 alphanumeric)
+                leiCode: (value) => /^[A-Z0-9]{20}$/.test(value),
+                
+                // ISO 6523 Code validation
+                iso6523Code: (value) => /^\d{4}:\d+$/.test(value),
+                
+                // GLN validation (13 digits)
+                globalLocationNumber: (value) => /^\d{13}$/.test(value),
+                
+                // ISIC v4 validation (4 digits)
+                isicV4: (value) => /^\d{4}$/.test(value),
+                
+                // Tax ID validation (varies by country)
+                taxID: (value) => /^[\w\d\-]{5,20}$/.test(value),
+                
+                // VAT ID validation (country code + digits)
+                vatID: (value) => /^[A-Z]{2}[\w\d]{5,15}$/.test(value)
+            };
+            
+            // Organization properties validation
+            const organizationValidation = {
+                foundingDate: (value) => !isNaN(Date.parse(value)),
+                dissolutionDate: (value) => !isNaN(Date.parse(value)),
+                numberOfEmployees: (value) => typeof value === 'number' && value >= 0
+            };
+            
+            // Place properties validation
+            const placeValidation = {
+                branchCode: (value) => typeof value === 'string' && value.length > 0,
+                hasDriveThroughService: (value) => typeof value === 'boolean'
+            };
+            
+            // Check required properties
+            requiredProperties.forEach(prop => {
+                if (!jsonldDoc[prop]) {
+                    errors.push(`Missing required property: ${prop}`);
+                } else {
+                    details.push(`✅ Required property present: ${prop}`);
+                }
+            });
+            
+            // Check recommended properties
+            let recommendedCount = 0;
+            recommendedProperties.forEach(prop => {
+                if (jsonldDoc[prop]) {
+                    recommendedCount++;
+                    details.push(`✅ Recommended property present: ${prop}`);
+                } else {
+                    warnings.push(`Missing recommended property: ${prop}`);
+                }
+            });
+            
+            // Validate LocalBusiness specific properties
+            Object.keys(localBusinessValidation).forEach(prop => {
+                if (jsonldDoc[prop]) {
+                    if (localBusinessValidation[prop](jsonldDoc[prop])) {
+                        details.push(`✅ ${prop} format valid`);
+                    } else {
+                        errors.push(`Invalid format for ${prop}: ${jsonldDoc[prop]}`);
+                    }
+                }
+            });
+            
+            // Validate Organization properties
+            Object.keys(organizationValidation).forEach(prop => {
+                if (jsonldDoc[prop]) {
+                    if (organizationValidation[prop](jsonldDoc[prop])) {
+                        details.push(`✅ ${prop} format valid`);
+                    } else {
+                        errors.push(`Invalid format for ${prop}: ${jsonldDoc[prop]}`);
+                    }
+                }
+            });
+            
+            // Validate Place properties
+            Object.keys(placeValidation).forEach(prop => {
+                if (jsonldDoc[prop]) {
+                    if (placeValidation[prop](jsonldDoc[prop])) {
+                        details.push(`✅ ${prop} format valid`);
+                    } else {
+                        errors.push(`Invalid format for ${prop}: ${jsonldDoc[prop]}`);
+                    }
+                }
+            });
+            
+            // Validate nested address structure
+            if (jsonldDoc.address) {
+                const requiredAddressProps = ['@type', 'addressLocality', 'addressRegion', 'addressCountry'];
+                const addressErrors = [];
+                
+                requiredAddressProps.forEach(prop => {
+                    if (!jsonldDoc.address[prop]) {
+                        addressErrors.push(`Address missing required property: ${prop}`);
+                    }
+                });
+                
+                if (jsonldDoc.address['@type'] !== 'PostalAddress') {
+                    addressErrors.push(`Address @type should be 'PostalAddress', found: ${jsonldDoc.address['@type']}`);
+                }
+                
+                // Validate postal code format by country
+                if (jsonldDoc.address.postalCode && jsonldDoc.address.addressCountry) {
+                    const postalValidation = {
+                        'US': /^\d{5}(-\d{4})?$/,
+                        'CA': /^[A-Z]\d[A-Z] \d[A-Z]\d$/,
+                        'GB': /^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/,
+                        'DE': /^\d{5}$/,
+                        'FR': /^\d{5}$/
+                    };
+                    
+                    const countryCode = jsonldDoc.address.addressCountry;
+                    if (postalValidation[countryCode] && !postalValidation[countryCode].test(jsonldDoc.address.postalCode)) {
+                        addressErrors.push(`Invalid postal code format for ${countryCode}: ${jsonldDoc.address.postalCode}`);
+                    }
+                }
+                
+                if (addressErrors.length === 0) {
+                    details.push(`✅ Address structure valid`);
+                } else {
+                    errors.push(...addressErrors);
+                }
+            }
+            
+            // Validate contact points
+            if (jsonldDoc.contactPoint && Array.isArray(jsonldDoc.contactPoint)) {
+                const validContactTypes = [
+                    'customer service', 'technical support', 'billing support', 'bill payment',
+                    'sales', 'reservations', 'credit card support', 'emergency', 'baggage tracking',
+                    'roadside assistance', 'package tracking'
+                ];
+                
+                jsonldDoc.contactPoint.forEach((contact, index) => {
+                    if (contact.contactType && !validContactTypes.includes(contact.contactType)) {
+                        warnings.push(`ContactPoint[${index}] has non-standard contactType: ${contact.contactType}`);
+                    }
+                    
+                    if (contact.availableLanguage && Array.isArray(contact.availableLanguage)) {
+                        // Basic language code validation (ISO 639-1)
+                        contact.availableLanguage.forEach(lang => {
+                            if (typeof lang === 'string' && !/^[a-z]{2}(-[A-Z]{2})?$/.test(lang) && 
+                                !['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Chinese', 'Japanese', 'Korean', 'Arabic'].includes(lang)) {
+                                warnings.push(`ContactPoint[${index}] has non-standard language: ${lang}`);
+                            }
+                        });
+                    }
+                });
+                
+                details.push(`✅ ContactPoint array structure valid`);
+            }
+            
+            // Validate offers structure
+            if (jsonldDoc.makesOffer && Array.isArray(jsonldDoc.makesOffer)) {
+                jsonldDoc.makesOffer.forEach((offer, index) => {
+                    if (offer.priceSpecification && Array.isArray(offer.priceSpecification)) {
+                        offer.priceSpecification.forEach((price, priceIndex) => {
+                            if (price.priceCurrency && !/^[A-Z]{3}$/.test(price.priceCurrency)) {
+                                errors.push(`Offer[${index}].priceSpecification[${priceIndex}] has invalid currency: ${price.priceCurrency}`);
+                            }
+                            
+                            if (price.price && (isNaN(parseFloat(price.price)) || parseFloat(price.price) < 0)) {
+                                errors.push(`Offer[${index}].priceSpecification[${priceIndex}] has invalid price: ${price.price}`);
+                            }
+                        });
+                    }
+                });
+                
+                details.push(`✅ MakesOffer array structure validated`);
+            }
+            
+            // Validate geographic coordinates
+            if (jsonldDoc.geo) {
+                const lat = parseFloat(jsonldDoc.geo.latitude);
+                const lng = parseFloat(jsonldDoc.geo.longitude);
+                
+                if (isNaN(lat) || isNaN(lng)) {
+                    errors.push(`Geographic coordinates must be valid numbers`);
+                } else if (lat < -90 || lat > 90) {
+                    errors.push(`Latitude must be between -90 and 90, found: ${lat}`);
+                } else if (lng < -180 || lng > 180) {
+                    errors.push(`Longitude must be between -180 and 180, found: ${lng}`);
+                } else {
+                    details.push(`✅ Geographic coordinates valid: ${lat}, ${lng}`);
+                }
+            }
+            
+            // Validate areaServed
+            if (jsonldDoc.areaServed && Array.isArray(jsonldDoc.areaServed)) {
+                const validAreaTypes = ['City', 'AdministrativeArea', 'Country', 'State', 'GeoCircle', 'GeoShape'];
+                jsonldDoc.areaServed.forEach((area, index) => {
+                    if (area['@type'] && !validAreaTypes.includes(area['@type'])) {
+                        warnings.push(`AreaServed[${index}] has non-standard @type: ${area['@type']}`);
+                    }
+                    
+                    if (area['@type'] === 'GeoCircle') {
+                        if (!area.geoRadius || isNaN(parseFloat(area.geoRadius))) {
+                            errors.push(`GeoCircle areaServed[${index}] missing valid geoRadius`);
+                        }
+                        if (!area.geoMidpoint || !area.geoMidpoint.latitude || !area.geoMidpoint.longitude) {
+                            errors.push(`GeoCircle areaServed[${index}] missing valid geoMidpoint coordinates`);
+                        }
+                    }
+                });
+                
+                details.push(`✅ AreaServed array structure validated`);
+            }
+            
+            // Update results
+            if (errors.length > 0) {
+                results.errors.push(...errors);
+            }
+            if (warnings.length > 0) {
+                results.warnings.push(...warnings);
+            }
+            results.details.push(...details);
+            
+            return errors.length === 0;
+        }
+
+        // Display validation results
+        function displayValidationResults(results) {
+            const resultsDiv = document.getElementById('results');
+            const totalChecks = 7; // Updated to include comprehensive Schema.org validation
+            const passedChecks = [
+                results.basicStructure,
+                results.contextValidation,
+                results.schemaCompliance,
+                results.nestedObjects,
+                results.dataTypes,
+                results.commentFields,
+                results.schemaOrgCompliance
+            ].filter(Boolean).length;
+            
+            const overallStatus = passedChecks === totalChecks ? 'success' : 'error';
+            const statusIcon = overallStatus === 'success' ? '🎉' : '⚠️';
+            
+            let html = `
+                <div class="validation-summary">
+                    <h3>${statusIcon} Validation Summary</h3>
+                    <p><strong>Overall Status:</strong> ${passedChecks}/${totalChecks} checks passed</p>
+                    <p><strong>Errors:</strong> ${results.errors.length}</p>
+                    <p><strong>Warnings:</strong> ${results.warnings.length}</p>
+                </div>
+                
+                <h3>📋 Detailed Results</h3>
+            `;
+            
+            // Individual validation results
+            const checks = [
+                { name: 'Basic JSON-LD Structure', result: results.basicStructure },
+                { name: 'Context Validation', result: results.contextValidation },
+                { name: 'Schema.org Compliance', result: results.schemaCompliance },
+                { name: 'Nested Objects', result: results.nestedObjects },
+                { name: 'Data Types', result: results.dataTypes },
+                { name: 'Comment Fields Check', result: results.commentFields },
+                { name: 'Schema.org LocalBusiness Rules', result: results.schemaOrgCompliance }
+            ];
+            
+            checks.forEach(check => {
+                const status = check.result ? 'pass' : 'fail';
+                const icon = check.result ? '✅' : '❌';
+                html += `
+                    <div class="validation-item ${status}">
+                        <strong>${icon} ${check.name}</strong>: ${check.result ? 'PASSED' : 'FAILED'}
+                    </div>
+                `;
+            });
+            
+            // Show details
+            if (results.details.length > 0) {
+                html += '<h4>📝 Validation Details</h4>';
+                results.details.forEach(detail => {
+                    html += `<div class="validation-item pass">${detail}</div>`;
+                });
+            }
+            
+            // Show errors
+            if (results.errors.length > 0) {
+                html += '<h4>❌ Errors</h4>';
+                results.errors.forEach(error => {
+                    html += `<div class="validation-item fail"><strong>Error:</strong> ${error}</div>`;
+                });
+            }
+            
+            // Show warnings
+            if (results.warnings.length > 0) {
+                html += '<h4>⚠️ Warnings</h4>';
+                results.warnings.forEach(warning => {
+                    html += `<div class="validation-item" style="background: #fff3cd; border-left-color: #f39c12;"><strong>Warning:</strong> ${warning}</div>`;
+                });
+            }
+            
+            // Final recommendation
+            if (overallStatus === 'success') {
+                html += `
+                    <div class="validation-item pass">
+                        <strong>🚀 Recommendation:</strong> Your JSON-LD schema is valid and ready for production use!
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="validation-item fail">
+                        <strong>🔧 Recommendation:</strong> Please fix the errors above before using this schema in production.
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        // Utility functions
+        function showMessage(type, message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `<div class="validation-item ${type === 'success' ? 'pass' : 'fail'}">${message}</div>`;
+        }
+
+        function showProgress(percent, text) {
+            const progressSection = document.getElementById('progressSection');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressSection.style.display = 'block';
+            progressFill.style.width = percent + '%';
+            progressText.textContent = text;
+        }
+
+        function hideProgress() {
+            document.getElementById('progressSection').style.display = 'none';
+        }
+
+        function clearResults() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('results').innerHTML = '';
+            hideProgress();
+            currentJsonLd = null;
+            document.getElementById('validateBtn').disabled = true;
+            document.getElementById('jsonFile').value = '';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('JSON-LD Validator initialized');
+            
+            // Wait a moment for the library to load, then check
+            setTimeout(() => {
+                if (window.jsonldLoaded && typeof jsonld !== 'undefined') {
+                    console.log('jsonld.js loaded successfully, version:', jsonld.version || 'Unknown');
+                    console.log('Load attempts required:', window.jsonldLoadAttempts);
+                } else if (window.jsonldLoadFailed) {
+                    console.error('jsonld.js failed to load from all CDN sources');
+                    showLibraryLoadError();
+                } else {
+                    // Still loading, wait a bit more
+                    setTimeout(() => {
+                        if (!window.jsonldLoaded) {
+                            console.error('jsonld.js load timeout - treating as failed');
+                            showLibraryLoadError();
+                        }
+                    }, 3000);
+                }
+            }, 1000);
+        });
+
+        // Show library load error with manual solution
+        function showLibraryLoadError() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div class="validation-item fail">
+                    <h3>❌ JSON-LD Library Load Error</h3>
+                    <p><strong>The jsonld.js library failed to load from CDN sources.</strong></p>
+                    <p>This could be due to:</p>
+                    <ul>
+                        <li>Network connectivity issues</li>
+                        <li>CDN service unavailability</li>
+                        <li>Corporate firewall blocking external scripts</li>
+                        <li>Browser security settings</li>
+                    </ul>
+                    <h4>Solutions:</h4>
+                    <ol>
+                        <li><strong>Refresh the page</strong> and try again</li>
+                        <li><strong>Check your internet connection</strong></li>
+                        <li><strong>Try opening in a different browser</strong></li>
+                        <li><strong>Disable browser extensions</strong> temporarily</li>
+                        <li><strong>Use basic JSON validation</strong> instead (see below)</li>
+                    </ol>
+                    <button onclick="tryBasicValidation()" style="margin-top: 10px;">Try Basic JSON Validation</button>
+                </div>
+            `;
+            
+            // Disable the main validate button
+            const validateBtn = document.getElementById('validateBtn');
+            if (validateBtn) {
+                validateBtn.disabled = true;
+                validateBtn.textContent = 'JSON-LD Library Not Available';
+            }
+        }
+
+        // Basic validation without jsonld.js library
+        function tryBasicValidation() {
+            if (!currentJsonLd) {
+                showMessage('error', '❌ No JSON file loaded');
+                return;
+            }
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h3>🔍 Basic JSON Validation (Without JSON-LD Library)</h3>';
+
+            const basicResults = {
+                errors: [],
+                warnings: [],
+                details: []
+            };
+
+            try {
+                // Basic JSON structure checks
+                if (!currentJsonLd['@context']) {
+                    basicResults.errors.push('Missing @context property');
+                } else if (currentJsonLd['@context'] !== 'https://schema.org') {
+                    basicResults.errors.push(`@context should be "https://schema.org", found: "${currentJsonLd['@context']}"`);
+                } else {
+                    basicResults.details.push('✅ @context property present and correct');
+                }
+
+                if (!currentJsonLd['@type']) {
+                    basicResults.errors.push('Missing @type property');
+                } else if (currentJsonLd['@type'] !== 'LocalBusiness') {
+                    basicResults.warnings.push(`@type is "${currentJsonLd['@type']}", expected "LocalBusiness"`);
+                } else {
+                    basicResults.details.push('✅ @type property correct');
+                }
+
+                if (!currentJsonLd['@id']) {
+                    basicResults.errors.push('Missing @id property');
+                } else {
+                    basicResults.details.push('✅ @id property present');
+                }
+
+                // Basic property checks
+                const requiredProps = ['name', 'address', 'telephone'];
+                requiredProps.forEach(prop => {
+                    if (!currentJsonLd[prop]) {
+                        basicResults.warnings.push(`Missing recommended property: ${prop}`);
+                    } else {
+                        basicResults.details.push(`✅ ${prop} property present`);
+                    }
+                });
+
+                // Display basic results
+                displayBasicResults(basicResults);
+
+            } catch (error) {
+                basicResults.errors.push(`Basic validation failed: ${error.message}`);
+                displayBasicResults(basicResults);
+            }
+        }
+
+        // Display basic validation results
+        function displayBasicResults(results) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `
+                <div class="validation-summary">
+                    <h3>📋 Basic JSON Structure Validation</h3>
+                    <p><strong>Note:</strong> This is basic validation only. Full JSON-LD validation requires the jsonld.js library.</p>
+                    <p><strong>Errors:</strong> ${results.errors.length}</p>
+                    <p><strong>Warnings:</strong> ${results.warnings.length}</p>
+                </div>
+            `;
+
+            // Show details
+            if (results.details.length > 0) {
+                html += '<h4>✅ Passed Checks</h4>';
+                results.details.forEach(detail => {
+                    html += `<div class="validation-item pass">${detail}</div>`;
+                });
+            }
+
+            // Show errors
+            if (results.errors.length > 0) {
+                html += '<h4>❌ Errors</h4>';
+                results.errors.forEach(error => {
+                    html += `<div class="validation-item fail"><strong>Error:</strong> ${error}</div>`;
+                });
+            }
+
+            // Show warnings
+            if (results.warnings.length > 0) {
+                html += '<h4>⚠️ Warnings</h4>';
+                results.warnings.forEach(warning => {
+                    html += `<div class="validation-item" style="background: #fff3cd; border-left-color: #f39c12;"><strong>Warning:</strong> ${warning}</div>`;
+                });
+            }
+
+            html += `
+                <div class="validation-item" style="background: #e3f2fd; border-left-color: #3498db;">
+                    <strong>💡 Tip:</strong> For complete JSON-LD validation including context resolution and schema compliance, 
+                    please refresh the page to retry loading the JSON-LD library, or check your network connection.
+                </div>
+            `;
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
