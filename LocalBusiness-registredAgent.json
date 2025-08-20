@@ -14,7 +14,6 @@
   "taxID": "12-3456789",
   "duns": "123456789",
   "naics": "561499",
-  "leiCode": "1234567890ABCDEFGHIJ12",
   "iso6523Code": "0060:1234567890123",
   "address": {
     "@type": "PostalAddress",

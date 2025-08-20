@@ -67,12 +67,24 @@
         loadJsonLdLibrary();
     </script>
     <style>
+        /* CSS Reset for consistent display */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        * {
+            box-sizing: border-box;
         }
         
         .container {
@@ -80,6 +92,7 @@
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0;
         }
         
         h1 {
@@ -103,6 +116,7 @@
             padding: 20px;
             border-radius: 5px;
             margin-bottom: 20px;
+            overflow: hidden;
         }
         
         .file-input-section label {
@@ -154,6 +168,7 @@
             margin-top: 20px;
             max-height: 500px;
             overflow-y: auto;
+            min-height: 0;
         }
         
         .success {
@@ -241,7 +256,7 @@
     <div class="container">
         <h1>🔍 JSON-LD Schema Validator</h1>
         <p style="text-align: center; color: #7f8c8d;">
-            Comprehensive validation for LocalBusiness Schema.org JSON-LD files with official Schema.org rules
+            Comprehensive validation for JSON-LD Schema.org files with official Schema.org rules
         </p>
         
         <div class="validation-section">
@@ -250,8 +265,20 @@
                 <label for="jsonFile">Select your JSON-LD file:</label>
                 <input type="file" id="jsonFile" accept=".json,.jsonld" />
                 <p style="margin-top: 10px; color: #7f8c8d; font-size: 14px;">
-                    Or use the default LocalBusiness-registredAgent.json file in this directory
+                    Or use the default LocalBusiness-registredAgent.json file in this directory<br>
+                    <small>Supports: LocalBusiness, WebPage, Article, NewsArticle, BlogPosting, and other Schema.org types</small>
                 </p>
+            </div>
+            
+            <div class="file-input-section">
+                <label for="jsonTextArea">Or paste your JSON-LD content directly:</label>
+                <textarea id="jsonTextArea" 
+                    placeholder="Paste your JSON-LD content here..." 
+                    style="width: 100%; height: 200px; padding: 10px; border: 2px dashed #bdc3c7; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 14px; resize: vertical; background-color: #ffffff; margin: 0; box-sizing: border-box;"></textarea>
+                <div style="margin-top: 10px;">
+                    <button onclick="validatePastedContent()" id="validatePastedBtn" disabled style="background: #27ae60;">Validate Pasted Content</button>
+                    <button onclick="clearTextArea()" style="background: #e74c3c;">Clear</button>
+                </div>
             </div>
             
             <div class="buttons">
@@ -299,6 +326,55 @@
             }
         });
 
+        // Textarea input handler
+        document.getElementById('jsonTextArea').addEventListener('input', function(event) {
+            const content = event.target.value.trim();
+            const validatePastedBtn = document.getElementById('validatePastedBtn');
+            
+            if (content.length > 0) {
+                validatePastedBtn.disabled = false;
+                // Clear file input when user types in textarea
+                document.getElementById('jsonFile').value = '';
+                document.getElementById('validateBtn').disabled = true;
+            } else {
+                validatePastedBtn.disabled = true;
+            }
+        });
+
+        // Validate pasted content function
+        function validatePastedContent() {
+            const content = document.getElementById('jsonTextArea').value.trim();
+            
+            if (!content) {
+                showMessage('error', '❌ No content to validate');
+                return;
+            }
+            
+            try {
+                currentJsonLd = JSON.parse(content);
+                showMessage('success', '✅ JSON content parsed successfully');
+                
+                // Clear file input
+                document.getElementById('jsonFile').value = '';
+                document.getElementById('validateBtn').disabled = true;
+                
+                // Proceed with validation
+                validateLoadedFile();
+                
+            } catch (error) {
+                showMessage('error', `❌ Invalid JSON content: ${error.message}`);
+                currentJsonLd = null;
+            }
+        }
+
+        // Clear textarea function
+        function clearTextArea() {
+            document.getElementById('jsonTextArea').value = '';
+            document.getElementById('validatePastedBtn').disabled = true;
+            currentJsonLd = null;
+            clearResults();
+        }
+
         // Load default file
         async function loadDefaultFile() {
             try {
@@ -308,6 +384,11 @@
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 currentJsonLd = await response.json();
+                
+                // Clear textarea and file input
+                document.getElementById('jsonTextArea').value = '';
+                document.getElementById('jsonFile').value = '';
+                document.getElementById('validatePastedBtn').disabled = true;
                 
                 // Enable appropriate validation button based on library availability
                 if (typeof jsonld !== 'undefined') {
@@ -411,8 +492,8 @@
                 const expanded = await jsonld.expand(jsonldDoc);
                 results.details.push('✅ Valid JSON-LD document structure');
                 
-                // Check required properties
-                const requiredProps = ['@context', '@type', '@id'];
+                // Check required properties for JSON-LD
+                const requiredProps = ['@context', '@type'];
                 for (const prop of requiredProps) {
                     if (!jsonldDoc[prop]) {
                         results.errors.push(`Missing required property: ${prop}`);
@@ -420,11 +501,21 @@
                     }
                 }
                 
-                results.details.push('✅ All required root properties present (@context, @type, @id)');
+                results.details.push('✅ All required JSON-LD properties present (@context, @type)');
                 
-                // Check @type is LocalBusiness
-                if (jsonldDoc['@type'] !== 'LocalBusiness') {
-                    results.warnings.push(`Expected @type 'LocalBusiness', found '${jsonldDoc['@type']}'`);
+                // Check if @id is present (recommended but not required)
+                if (jsonldDoc['@id']) {
+                    results.details.push('✅ Node identifier (@id) present - helps with linking and SEO');
+                } else {
+                    results.warnings.push('Consider adding @id property for unique node identification');
+                }
+                
+                // Validate @type and detect schema type
+                if (jsonldDoc['@type']) {
+                    results.details.push(`✅ Schema type detected: ${jsonldDoc['@type']}`);
+                } else {
+                    results.errors.push('Missing required @type property');
+                    return false;
                 }
                 
                 return true;
@@ -566,8 +657,11 @@
             // Validate phone format
             if (jsonldDoc.telephone) {
                 checksPerformed++;
-                if (!/^\+\d{11,15}$/.test(jsonldDoc.telephone)) {
-                    errors.push(`Invalid telephone format: ${jsonldDoc.telephone} (should be +1234567890)`);
+                // Accept international format (+1234567890) or common US formats
+                if (!/^\+\d{7,15}$/.test(jsonldDoc.telephone) && 
+                    !/^\(\d{3}\) \d{3}-\d{4}$/.test(jsonldDoc.telephone) &&
+                    !/^\d{3}-\d{3}-\d{4}$/.test(jsonldDoc.telephone)) {
+                    errors.push(`Invalid telephone format: ${jsonldDoc.telephone} (use +1234567890, (123) 456-7890, or 123-456-7890)`);
                 }
             }
             
@@ -665,15 +759,39 @@
             return true;
         }
 
-        // Comprehensive Schema.org LocalBusiness validation
+        // Comprehensive Schema.org validation (type-aware)
         function validateSchemaOrgCompliance(jsonldDoc, results) {
             const errors = [];
             const warnings = [];
             const details = [];
             
-            // LocalBusiness required properties per Schema.org
-            const requiredProperties = ['@context', '@type', 'name'];
-            const recommendedProperties = ['address', 'telephone', '@id'];
+            const schemaType = jsonldDoc['@type'];
+            
+            // Type-specific validation
+            if (schemaType === 'LocalBusiness' || (Array.isArray(schemaType) && schemaType.includes('LocalBusiness'))) {
+                return validateLocalBusinessCompliance(jsonldDoc, results, errors, warnings, details);
+            } else if (schemaType === 'WebPage' || (Array.isArray(schemaType) && schemaType.includes('WebPage'))) {
+                return validateWebPageCompliance(jsonldDoc, results, errors, warnings, details);
+            } else if (['Article', 'NewsArticle', 'BlogPosting'].includes(schemaType) || 
+                      (Array.isArray(schemaType) && schemaType.some(type => ['Article', 'NewsArticle', 'BlogPosting'].includes(type)))) {
+                return validateArticleCompliance(jsonldDoc, results, errors, warnings, details);
+            } else {
+                // Generic validation for other types
+                return validateGenericCompliance(jsonldDoc, results, errors, warnings, details);
+            }
+        }
+        
+        // LocalBusiness-specific validation
+        function validateLocalBusinessCompliance(jsonldDoc, results, errors, warnings, details) {
+            
+            // LocalBusiness REQUIRED properties per Schema.org + Google guidelines
+            const requiredProperties = ['@context', '@type', 'name', 'address'];
+            
+            // LocalBusiness RECOMMENDED properties per Google guidelines
+            const recommendedProperties = ['@id', 'telephone', 'url', 'geo', 'openingHoursSpecification', 'priceRange'];
+            
+            // HIGHLY RECOMMENDED for SEO and functionality
+            const highlyRecommendedProperties = ['geo.latitude', 'geo.longitude', 'aggregateRating', 'review'];
             
             // LocalBusiness specific property validation
             const localBusinessValidation = {
@@ -686,29 +804,36 @@
                     return false;
                 },
                 
-                // Opening hours format validation
+                // Opening hours format validation per Schema.org spec
                 openingHours: (value) => {
                     if (typeof value === 'string') {
-                        // Format: Mo,Tu,We,Th,Fr,Sa,Su 09:00-17:00
+                        // Format: Mo,Tu,We,Th,Fr,Sa,Su 09:00-17:00 OR Mo-Su 24/7
                         return /^(Mo|Tu|We|Th|Fr|Sa|Su)(,(Mo|Tu|We|Th|Fr|Sa|Su))* \d{2}:\d{2}-\d{2}:\d{2}$/.test(value) ||
-                               /^Mo-Su$/.test(value);
+                               /^Mo-Su$/.test(value) || value === '24/7';
                     }
                     return false;
                 },
                 
-                // Payment methods validation
+                // Payment methods validation per Schema.org
                 paymentAccepted: (value) => {
                     if (Array.isArray(value)) {
-                        const validPayments = ['Cash', 'Credit Card', 'Debit Card', 'PayPal', 'Apple Pay', 'Google Pay', 'Cryptocurrency', 'Check', 'Money Order'];
-                        return value.every(payment => validPayments.includes(payment));
+                        const validPayments = [
+                            'Cash', 'Credit Card', 'Debit Card', 'PayPal', 'Apple Pay', 
+                            'Google Pay', 'Cryptocurrency', 'Check', 'Money Order',
+                            'American Express', 'Visa', 'Mastercard', 'Discover'
+                        ];
+                        return value.every(payment => 
+                            validPayments.some(valid => payment.toLowerCase().includes(valid.toLowerCase()))
+                        );
                     }
                     return typeof value === 'string';
                 },
                 
-                // Price range validation
+                // Price range validation per Google guidelines
                 priceRange: (value) => {
                     if (typeof value === 'string') {
-                        return /^[\$£€¥₹][\$£€¥₹]?[\$£€¥₹]?[\$£€¥₹]?$/.test(value);
+                        // Google accepts: $, $$, $$$, $$$$, or numerical ranges like "$10-15"
+                        return /^[\$£€¥₹]{1,4}$/.test(value) || /^\$\d+-\$?\d+$/.test(value) || value.length < 100;
                     }
                     return false;
                 },
@@ -723,7 +848,7 @@
                 leiCode: (value) => /^[A-Z0-9]{20}$/.test(value),
                 
                 // ISO 6523 Code validation
-                iso6523Code: (value) => /^\d{4}:\d+$/.test(value),
+                iso6523Code: (value) => /^\d{4}:[A-Z0-9]+(:.*)?$/.test(value),
                 
                 // GLN validation (13 digits)
                 globalLocationNumber: (value) => /^\d{13}$/.test(value),
@@ -751,23 +876,41 @@
                 hasDriveThroughService: (value) => typeof value === 'boolean'
             };
             
-            // Check required properties
+            // Check REQUIRED properties
             requiredProperties.forEach(prop => {
                 if (!jsonldDoc[prop]) {
-                    errors.push(`Missing required property: ${prop}`);
+                    errors.push(`Missing REQUIRED property: ${prop}`);
                 } else {
                     details.push(`✅ Required property present: ${prop}`);
                 }
             });
             
-            // Check recommended properties
+            // Check RECOMMENDED properties
             let recommendedCount = 0;
             recommendedProperties.forEach(prop => {
                 if (jsonldDoc[prop]) {
                     recommendedCount++;
                     details.push(`✅ Recommended property present: ${prop}`);
                 } else {
-                    warnings.push(`Missing recommended property: ${prop}`);
+                    warnings.push(`Missing recommended property: ${prop} (improves SEO and user experience)`);
+                }
+            });
+            
+            // Check HIGHLY RECOMMENDED properties
+            highlyRecommendedProperties.forEach(prop => {
+                if (prop.includes('.')) {
+                    const [parent, child] = prop.split('.');
+                    if (jsonldDoc[parent] && jsonldDoc[parent][child]) {
+                        details.push(`✅ Highly recommended property present: ${prop}`);
+                    } else if (jsonldDoc[parent]) {
+                        warnings.push(`Missing highly recommended property: ${prop} (critical for location-based features)`);
+                    }
+                } else {
+                    if (jsonldDoc[prop]) {
+                        details.push(`✅ Highly recommended property present: ${prop}`);
+                    } else {
+                        warnings.push(`Consider adding highly recommended property: ${prop} (enhances rich results)`);
+                    }
                 }
             });
             
@@ -804,11 +947,13 @@
                 }
             });
             
-            // Validate nested address structure
+            // Validate nested address structure (REQUIRED per Google guidelines)
             if (jsonldDoc.address) {
-                const requiredAddressProps = ['@type', 'addressLocality', 'addressRegion', 'addressCountry'];
+                const requiredAddressProps = ['@type'];
+                const recommendedAddressProps = ['streetAddress', 'addressLocality', 'addressRegion', 'postalCode', 'addressCountry'];
                 const addressErrors = [];
                 
+                // Check required address properties
                 requiredAddressProps.forEach(prop => {
                     if (!jsonldDoc.address[prop]) {
                         addressErrors.push(`Address missing required property: ${prop}`);
@@ -819,27 +964,51 @@
                     addressErrors.push(`Address @type should be 'PostalAddress', found: ${jsonldDoc.address['@type']}`);
                 }
                 
-                // Validate postal code format by country
+                // Check recommended address properties
+                let addressRecommendedCount = 0;
+                recommendedAddressProps.forEach(prop => {
+                    if (jsonldDoc.address[prop]) {
+                        addressRecommendedCount++;
+                        details.push(`✅ Address property present: ${prop}`);
+                    } else {
+                        warnings.push(`Address missing recommended property: ${prop} (improves location accuracy)`);
+                    }
+                });
+                
+                // Validate postal code format by country (enhanced validation)
                 if (jsonldDoc.address.postalCode && jsonldDoc.address.addressCountry) {
                     const postalValidation = {
                         'US': /^\d{5}(-\d{4})?$/,
                         'CA': /^[A-Z]\d[A-Z] \d[A-Z]\d$/,
                         'GB': /^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/,
                         'DE': /^\d{5}$/,
-                        'FR': /^\d{5}$/
+                        'FR': /^\d{5}$/,
+                        'AU': /^\d{4}$/,
+                        'NL': /^\d{4} [A-Z]{2}$/,
+                        'IT': /^\d{5}$/,
+                        'ES': /^\d{5}$/,
+                        'JP': /^\d{3}-\d{4}$/
                     };
                     
                     const countryCode = jsonldDoc.address.addressCountry;
-                    if (postalValidation[countryCode] && !postalValidation[countryCode].test(jsonldDoc.address.postalCode)) {
-                        addressErrors.push(`Invalid postal code format for ${countryCode}: ${jsonldDoc.address.postalCode}`);
+                    if (postalValidation[countryCode]) {
+                        if (postalValidation[countryCode].test(jsonldDoc.address.postalCode)) {
+                            details.push(`✅ Postal code format valid for ${countryCode}`);
+                        } else {
+                            errors.push(`Invalid postal code format for ${countryCode}: ${jsonldDoc.address.postalCode}`);
+                        }
+                    } else {
+                        details.push(`⚠️ Postal code format not validated for country: ${countryCode}`);
                     }
                 }
                 
-                if (addressErrors.length === 0) {
-                    details.push(`✅ Address structure valid`);
-                } else {
+                if (addressErrors.length > 0) {
                     errors.push(...addressErrors);
+                } else {
+                    details.push(`✅ Address structure valid (${addressRecommendedCount}/${recommendedAddressProps.length} recommended properties present)`);
                 }
+            } else {
+                errors.push('Missing REQUIRED property: address (PostalAddress object)');
             }
             
             // Validate contact points
@@ -888,7 +1057,7 @@
                 details.push(`✅ MakesOffer array structure validated`);
             }
             
-            // Validate geographic coordinates
+            // Validate geographic coordinates (Google requires 5+ decimal places precision)
             if (jsonldDoc.geo) {
                 const lat = parseFloat(jsonldDoc.geo.latitude);
                 const lng = parseFloat(jsonldDoc.geo.longitude);
@@ -900,7 +1069,117 @@
                 } else if (lng < -180 || lng > 180) {
                     errors.push(`Longitude must be between -180 and 180, found: ${lng}`);
                 } else {
-                    details.push(`✅ Geographic coordinates valid: ${lat}, ${lng}`);
+                    // Check precision (Google recommends at least 5 decimal places)
+                    const latStr = jsonldDoc.geo.latitude.toString();
+                    const lngStr = jsonldDoc.geo.longitude.toString();
+                    const latPrecision = latStr.includes('.') ? latStr.split('.')[1].length : 0;
+                    const lngPrecision = lngStr.includes('.') ? lngStr.split('.')[1].length : 0;
+                    
+                    if (latPrecision < 5 || lngPrecision < 5) {
+                        warnings.push(`Geographic coordinates should have at least 5 decimal places for precision (current: lat=${latPrecision}, lng=${lngPrecision})`);
+                    }
+                    
+                    details.push(`✅ Geographic coordinates valid: ${lat}, ${lng} (precision: ${latPrecision}, ${lngPrecision} decimal places)`);
+                }
+            } else {
+                warnings.push('Missing recommended property: geo (GeoCoordinates) - critical for local search visibility');
+            }
+            // Validate openingHoursSpecification (Google format requirements)
+            if (jsonldDoc.openingHoursSpecification) {
+                const openingHours = Array.isArray(jsonldDoc.openingHoursSpecification) 
+                    ? jsonldDoc.openingHoursSpecification 
+                    : [jsonldDoc.openingHoursSpecification];
+                    
+                openingHours.forEach((spec, index) => {
+                    // Check required properties
+                    if (!spec.opens || !spec.closes) {
+                        errors.push(`OpeningHoursSpecification[${index}] missing required opens/closes times`);
+                    }
+                    
+                    // Validate time format (hh:mm:ss or hh:mm)
+                    if (spec.opens && !/^\d{2}:\d{2}(:\d{2})?$/.test(spec.opens)) {
+                        errors.push(`OpeningHoursSpecification[${index}] invalid opens time format: ${spec.opens} (use HH:MM)`);
+                    }
+                    if (spec.closes && !/^\d{2}:\d{2}(:\d{2})?$/.test(spec.closes)) {
+                        errors.push(`OpeningHoursSpecification[${index}] invalid closes time format: ${spec.closes} (use HH:MM)`);
+                    }
+                    
+                    // Validate dayOfWeek format
+                    if (spec.dayOfWeek) {
+                        const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                        const dayArray = Array.isArray(spec.dayOfWeek) ? spec.dayOfWeek : [spec.dayOfWeek];
+                        
+                        dayArray.forEach(day => {
+                            if (!validDays.includes(day) && !day.startsWith('https://schema.org/')) {
+                                warnings.push(`OpeningHoursSpecification[${index}] non-standard dayOfWeek: ${day}`);
+                            }
+                        });
+                    }
+                    
+                    // Check for seasonal hours validation
+                    if (spec.validFrom && !/^\d{4}-\d{2}-\d{2}$/.test(spec.validFrom)) {
+                        errors.push(`OpeningHoursSpecification[${index}] invalid validFrom date format: ${spec.validFrom} (use YYYY-MM-DD)`);
+                    }
+                    if (spec.validThrough && !/^\d{4}-\d{2}-\d{2}$/.test(spec.validThrough)) {
+                        errors.push(`OpeningHoursSpecification[${index}] invalid validThrough date format: ${spec.validThrough} (use YYYY-MM-DD)`);
+                    }
+                });
+                
+                details.push(`✅ OpeningHoursSpecification structure validated (${openingHours.length} entries)`);
+            }
+            
+            // Validate image properties (required for Restaurant carousel)
+            if (jsonldDoc.image) {
+                const images = Array.isArray(jsonldDoc.image) ? jsonldDoc.image : [jsonldDoc.image];
+                images.forEach((img, index) => {
+                    if (typeof img === 'string') {
+                        try {
+                            new URL(img);
+                            details.push(`✅ Image[${index}] URL format valid`);
+                        } catch {
+                            errors.push(`Image[${index}] invalid URL: ${img}`);
+                        }
+                    } else if (img && img['@type'] === 'ImageObject' && img.url) {
+                        try {
+                            new URL(img.url);
+                            details.push(`✅ ImageObject[${index}] URL format valid`);
+                        } catch {
+                            errors.push(`ImageObject[${index}] invalid URL: ${img.url}`);
+                        }
+                    }
+                });
+            }
+            
+            // Validate telephone format (Google requires country code + area code)
+            if (jsonldDoc.telephone) {
+                // E.164 international format is preferred per Google guidelines
+                if (/^\+\d{7,15}$/.test(jsonldDoc.telephone)) {
+                    details.push(`✅ Telephone format valid (international E.164 format): ${jsonldDoc.telephone}`);
+                } else if (/^\(\d{3}\) \d{3}-\d{4}$/.test(jsonldDoc.telephone) || 
+                          /^\d{3}-\d{3}-\d{4}$/.test(jsonldDoc.telephone)) {
+                    details.push(`✅ Telephone format valid (US format): ${jsonldDoc.telephone}`);
+                    warnings.push(`Consider using international format with country code: ${jsonldDoc.telephone} → +1${jsonldDoc.telephone.replace(/\D/g, '')}`);
+                } else {
+                    warnings.push(`Telephone format should include country code and area code: ${jsonldDoc.telephone} (recommended: +1234567890)`);
+                }
+            }
+            
+            // Validate URL format
+            if (jsonldDoc.url) {
+                try {
+                    new URL(jsonldDoc.url);
+                    details.push(`✅ Business URL format valid: ${jsonldDoc.url}`);
+                } catch {
+                    errors.push(`Invalid business URL format: ${jsonldDoc.url}`);
+                }
+            }
+            
+            // Validate email format
+            if (jsonldDoc.email) {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(jsonldDoc.email)) {
+                    errors.push(`Invalid email format: ${jsonldDoc.email}`);
+                } else {
+                    details.push(`✅ Email format valid: ${jsonldDoc.email}`);
                 }
             }
             
@@ -932,6 +1211,121 @@
             if (warnings.length > 0) {
                 results.warnings.push(...warnings);
             }
+            results.details.push(...details);
+            
+            return errors.length === 0;
+        }
+        
+        // WebPage-specific validation
+        function validateWebPageCompliance(jsonldDoc, results, errors, warnings, details) {
+            // WebPage REQUIRED properties per Schema.org
+            const requiredProperties = ['@context', '@type'];
+            
+            // WebPage RECOMMENDED properties
+            const recommendedProperties = ['@id', 'name', 'url', 'description', 'mainContentOfPage'];
+            
+            // Check REQUIRED properties
+            requiredProperties.forEach(prop => {
+                if (!jsonldDoc[prop]) {
+                    errors.push(`Missing REQUIRED property: ${prop}`);
+                } else {
+                    details.push(`✅ Required property present: ${prop}`);
+                }
+            });
+            
+            // Check RECOMMENDED properties
+            recommendedProperties.forEach(prop => {
+                if (jsonldDoc[prop]) {
+                    details.push(`✅ Recommended property present: ${prop}`);
+                } else {
+                    warnings.push(`Missing recommended property: ${prop} (improves SEO)`);
+                }
+            });
+            
+            // Update results
+            if (errors.length > 0) results.errors.push(...errors);
+            if (warnings.length > 0) results.warnings.push(...warnings);
+            results.details.push(...details);
+            
+            return errors.length === 0;
+        }
+        
+        // Article-specific validation
+        function validateArticleCompliance(jsonldDoc, results, errors, warnings, details) {
+            // Article REQUIRED properties per Google guidelines
+            const requiredProperties = ['@context', '@type'];
+            
+            // Article RECOMMENDED properties per Google guidelines
+            const recommendedProperties = ['headline', 'author', 'datePublished', 'image'];
+            
+            // Check REQUIRED properties
+            requiredProperties.forEach(prop => {
+                if (!jsonldDoc[prop]) {
+                    errors.push(`Missing REQUIRED property: ${prop}`);
+                } else {
+                    details.push(`✅ Required property present: ${prop}`);
+                }
+            });
+            
+            // Check RECOMMENDED properties
+            recommendedProperties.forEach(prop => {
+                if (jsonldDoc[prop]) {
+                    details.push(`✅ Recommended property present: ${prop}`);
+                } else {
+                    warnings.push(`Missing recommended property: ${prop} (required for rich results)`);
+                }
+            });
+            
+            // Validate specific Article properties
+            if (jsonldDoc.datePublished && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(jsonldDoc.datePublished)) {
+                errors.push(`Invalid datePublished format: ${jsonldDoc.datePublished} (use ISO 8601: YYYY-MM-DDTHH:MM:SS)`);
+            }
+            
+            if (jsonldDoc.author && !jsonldDoc.author.name && !jsonldDoc.author['@type']) {
+                warnings.push('Author should have name and @type properties');
+            }
+            
+            // Update results
+            if (errors.length > 0) results.errors.push(...errors);
+            if (warnings.length > 0) results.warnings.push(...warnings);
+            results.details.push(...details);
+            
+            return errors.length === 0;
+        }
+        
+        // Generic validation for other schema types
+        function validateGenericCompliance(jsonldDoc, results, errors, warnings, details) {
+            // Basic required properties for any schema
+            const requiredProperties = ['@context', '@type'];
+            
+            // Check REQUIRED properties
+            requiredProperties.forEach(prop => {
+                if (!jsonldDoc[prop]) {
+                    errors.push(`Missing REQUIRED property: ${prop}`);
+                } else {
+                    details.push(`✅ Required property present: ${prop}`);
+                }
+            });
+            
+            // Generic recommendations
+            if (!jsonldDoc['@id']) {
+                warnings.push('Consider adding @id property for unique identification');
+            } else {
+                details.push('✅ Node identifier (@id) present');
+            }
+            
+            if (!jsonldDoc.name) {
+                warnings.push('Consider adding name property');
+            } else {
+                details.push('✅ Name property present');
+            }
+            
+            details.push(`ℹ️ Generic validation applied for schema type: ${jsonldDoc['@type']}`);
+            details.push('💡 For specific validation rules, ensure your schema type is supported: LocalBusiness, WebPage, Article, NewsArticle, BlogPosting');
+            
+            // Update results
+            if (errors.length > 0) results.errors.push(...errors);
+            if (warnings.length > 0) results.warnings.push(...warnings);
             results.details.push(...details);
             
             return errors.length === 0;
@@ -973,7 +1367,7 @@
                 { name: 'Nested Objects', result: results.nestedObjects },
                 { name: 'Data Types', result: results.dataTypes },
                 { name: 'Comment Fields Check', result: results.commentFields },
-                { name: 'Schema.org LocalBusiness Rules', result: results.schemaOrgCompliance }
+                { name: 'Schema.org Type-Specific Rules', result: results.schemaOrgCompliance }
             ];
             
             checks.forEach(check => {
@@ -1055,7 +1449,9 @@
             hideProgress();
             currentJsonLd = null;
             document.getElementById('validateBtn').disabled = true;
+            document.getElementById('validatePastedBtn').disabled = true;
             document.getElementById('jsonFile').value = '';
+            document.getElementById('jsonTextArea').value = '';
         }
 
         // Initialize
