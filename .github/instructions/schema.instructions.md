@@ -48,7 +48,8 @@ AI agents must demonstrate thorough file investigation before making any stateme
 ## AI Agent Resources
 - `full-schema-hierarchy-min.html` - Reference for complete schema.org vocabulary hierarchy
 - `schema-data-types-min.html` - Reference for all supported data types and constraints
-- `schema-all-jsonld.jsonld` - Comprehensive JSON-LD representation of the entire schema.org vocabulary
+- `schema-all-jsonld.jsonld` - Contains the definition of all terms in, all sections of, the vocabulary
+- Search for specific schema examples and usage patterns use FETCH MCP and visit `https://schema.org/docs/search_results.html?q=`{SEARCH_TERM}` urls and include them in your analysis. You may need to scroll subsequent pages to find the most relevant results
 ---
 
 ## **1. AI AGENT COMPLIANCE DIRECTIVES**
