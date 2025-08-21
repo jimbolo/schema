@@ -3,8 +3,8 @@
 **Project:** Schema.org JSON-LD Implementation  
 **Version:** 2025.1  
 **Last Updated:** August 20, 2025  
-**Apply To:** `**/*.{json,jsonld}` 
-**Ignore:** files listed in `**/*.{ignore}`
+**Apply To Any File:** `**`
+**Do Not Apply To:** Ignore files listed in `**/*.{ignore}`
 
 ---
 
@@ -51,6 +51,7 @@ AI agents must demonstrate thorough file investigation before making any stateme
 - `schema-data-types-min.html` - Reference for all supported data types and constraints
 - `schema-all-jsonld.jsonld` - Contains the definition of all terms in, all sections of, the vocabulary
 - Search for specific schema examples and usage patterns use FETCH MCP and visit `https://schema.org/docs/search_results.html?q=`{SEARCH_TERM}` urls and include them in your analysis. You may need to scroll subsequent pages to find the most relevant results
+- **ALWAYS and MUST** Fetch the complete Schema.org Type specification to ensure you are validating ALL mandatory and optional properties and list them on chat and verify against the source content with me.
 ---
 
 ## **1. AI AGENT COMPLIANCE DIRECTIVES**
@@ -62,6 +63,7 @@ AI agents must demonstrate thorough file investigation before making any stateme
 - **MANDATORY VALIDATION** - AI agents must validate all generated markup using official tools before providing output
 
 ### **1.2 Schema Context Rules**
+- **ALWAYS and MUST** Fetch the complete Schema.org Type specification to ensure you are validating ALL mandatory and optional properties and list them on chat and verify against the source content with me.
 - **ALWAYS** use `"@context": "https://schema.org"` - never HTTP, never custom contexts
 - **NEVER** generate data-vocabulary.org markup (deprecated since April 2020)
 - **NEVER** create custom schema extensions without explicit authorization

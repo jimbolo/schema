@@ -49,7 +49,7 @@
   "hasMap": "https://maps.app.goo.gl/4e6R8Ac38njXMhJ4A",
   "priceRange": "$",
   "currenciesAccepted": "USD",
-  "paymentAccepted": ["Credit Card", "PayPal"],
+  "paymentAccepted": "Credit Card, PayPal",
 
   "openingHoursSpecification": [
     {

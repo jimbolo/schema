@@ -1,0 +1,122 @@
+{
+  // Copilot Chat Performance Optimization
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true
+  },
+  
+  // Reduce file indexing for better performance
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/tmp/**": true,
+    "**/temp/**": true,
+    "**/.cache/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/*.log": true
+  },
+  
+  // Exclude large files from search to improve performance
+  "search.exclude": {
+    "**/.git": true,
+    "**/*.code-search": true,
+    "**/tmp": true,
+    "**/temp": true,
+    "**/.cache": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/*.log": true
+  },
+  
+  // Limit file indexing
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/*.tmp": true,
+    "**/*.temp": true,
+    "**/.cache": true
+  },
+  
+  // Optimize IntelliSense for better Copilot performance (JavaScript focused)
+  "javascript.suggest.includeCompletionsWithSnippetText": false,
+  "javascript.preferences.includePackageJsonAutoImports": "off",
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  
+  // Reduce memory usage
+  "editor.semanticHighlighting.enabled": false,
+  "editor.bracketPairColorization.enabled": false,
+  "editor.guides.bracketPairs": false,
+  
+  // Optimize for JSON/Schema files
+  "json.maxItemsComputed": 1000,
+  "json.schemaDownload.enable": false,
+  
+  // Terminal optimizations
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.enableImages": false,
+  
+  // Extension optimizations
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+  
+  // Workspace trust to avoid prompts
+  "security.workspace.trust.untrustedFiles": "open",
+  
+  // Copilot Advanced Performance Settings
+  "github.copilot.advanced": {
+    "length": 500,
+    "temperature": 0.1,
+    "top_p": 1
+  },
+  
+  // Copilot Chat Optimizations
+  "github.copilot.chat.localeOverride": "en",
+  "github.copilot.chat.welcomeMessage": "never",
+  "github.copilot.renameSuggestions.triggerAutomatically": false,
+  
+  // Inline Suggest Optimizations
+  "github.copilot.inlineSuggest.count": 3,
+  "github.copilot.editor.enableAutoCompletions": true,
+  
+  // Additional Performance Optimizations
+  "search.followSymlinks": false,
+  "files.hotExit": "off",
+  "editor.suggest.filterGraceful": false,
+  "editor.suggest.localityBonus": true,
+  "editor.wordBasedSuggestions": "off",
+  
+  // Copilot Agent Optimizations
+  "github.copilot.chat.experimental.codeGeneration": true,
+  "github.copilot.chat.experimental.temporalContext": false,
+  "github.copilot.editor.enableCodeActions": false,
+  
+  // Language Service Optimizations (JavaScript focused)
+  "javascript.suggest.autoImports": false,
+  
+  // HTML/JSON-LD Optimizations for your project
+  "html.suggest.html5": true,
+  "html.format.enable": true,
+  "html.validate.scripts": false,
+  "emmet.includeLanguages": {
+    "javascript": "html"
+  },
+  
+  // File Association Optimizations (aligned with your project)
+  "files.associations": {
+    "*.json": "jsonc",
+    "*.jsonld": "json",
+    "LocalBusiness-*.json": "jsonc"
+  },
+  
+  // File monitoring aligned with your project structure
+  "files.watcherInclude": [
+    "**/*.json",
+    "**/*.jsonld", 
+    "**/*.js",
+    "**/*.html",
+    "**/*.md"
+  ]
+}

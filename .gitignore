@@ -2,9 +2,10 @@
 *examples*
 *example*
 *workflows*
-*\.vscode*
-*vscode*
 *prompts*
 *promt*
 *testing*
-/scripts/
+/scripts*
+/src*
+*archived*
+json-ld-validator.html
