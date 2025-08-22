@@ -106,7 +106,7 @@
   
   // File Association Optimizations (aligned with your project)
   "files.associations": {
-    "*.json": "jsonc",
+    "*.json": "json",
     "*.jsonld": "json",
     "LocalBusiness-*.json": "jsonc"
   },
@@ -118,5 +118,22 @@
     "**/*.js",
     "**/*.html",
     "**/*.md"
-  ]
+  ],
+
+  // OpenAI defaults to minimize tokens (used by your app if it reads env)
+  "terminal.integrated.env.windows": {
+    // Active defaults
+    "OPENAI_MODEL": "gpt-4o-mini",
+    "MAX_OUTPUT_TOKENS": "200",
+    "REASONING_EFFORT": "low",
+    "STOP": "\n\n",
+
+    // Optional model presets for quick switching (read by your app)
+    "OPENAI_MODEL_PRIMARY": "gpt-4o-mini",
+    "OPENAI_MODEL_ADVANCED": "gpt-4o",
+    "OPENAI_MODEL_REASONING": "gpt-4.1-mini",
+    "OPENAI_MODEL_VISION": "gpt-4o-mini",
+    "OPENAI_MODEL_GPT5_PREVIEW": "gpt-5-preview",  // placeholder if available in your account
+    "OPENAI_MODELS": "gpt-4o-mini,gpt-4o,gpt-4.1-mini,gpt-4o-mini-vision,gpt-5-preview"
+  }
 }
