@@ -211,20 +211,134 @@
     }
   ],
 
+  // "knowsAbout": [
+  //   // Core Virtual Mailbox Services Based on Website Analysis
+  //   "Virtual Business Address Solutions",
+  //   "CMRA-Compliant Mailbox Services",
+  //   "Digital Mail Management Platform",
+  //   "Real Street Address Services",
+  //   "LLC Business Address Registration",
+  //   "Form 1583 Compliance and Notarization",
+  //   "USPS Commercial Mail Receiving",
+  //   "Professional Business Address Services",
+    
+  //   // Dropshipping and E-commerce Expertise (from dropshipping page analysis)
+  //   "E-commerce Fulfillment Services",
+  //   "Dropshipping Business Support",
+  //   "Multi-Vendor Return Management",
+  //   "Product Return Processing",
+  //   "Inventory Management for Online Stores",
+  //   "Customer Service Automation Support",
+  //   "Cross-Border E-commerce Solutions",
+  //   "FBA Amazon Address Services",
+  //   "Shopify Store Mail Management",
+  //   "Online Marketplace Logistics",
+    
+  //   // International and Expat Services (from expats page analysis)
+  //   "International Mail Forwarding",
+  //   "Expat Mail Management",
+  //   "U.S. Tax Document Handling",
+  //   "IRS Correspondence Management",
+  //   "Social Security Mail Services",
+  //   "Banking Correspondence for Expats",
+  //   "Immigration Document Reception",
+  //   "Overseas Relocation Mail Services",
+  //   "Voter Registration Address Services",
+  //   "Medicare and Health Insurance Mail",
+  //   "International Banking Address Requirements",
+    
+  //   // Registered Agent Services (from registered agent page analysis)
+  //   "Corporate Registered Agent Services",
+  //   "Legal Document Reception",
+  //   "Service of Process Management",
+  //   "Business Entity Compliance",
+  //   "State Registration Requirements",
+  //   "Corporate Governance Support",
+  //   "Legal Notice Forwarding",
+  //   "Business Privacy Protection",
+  //   "Multi-State Business Registration",
+  //   "LLC Formation Support",
+    
+  //   // Small Business Services (from small business page analysis)
+  //   "Small Business Mail Solutions",
+  //   "Professional Business Image",
+  //   "Remote Business Operations",
+  //   "Freelancer Mail Management",
+  //   "Solopreneur Address Services",
+  //   "Business Credit Building Support",
+  //   "Commercial Zone Addressing",
+  //   "Google Business Profile Addresses",
+  //   "Professional Email Signatures",
+  //   "Business Entity Separation",
+    
+  //   // Shipping and Logistics (from shipping calculator analysis)
+  //   "Multi-Carrier Shipping Solutions",
+  //   "International Shipping Rate Calculation",
+  //   "Package Consolidation Services",
+  //   "Real-Time Shipping Quotes",
+  //   "USPS, FedEx, UPS, DHL Services",
+  //   "Domestic and International Delivery",
+  //   "Shipping Cost Optimization",
+  //   "Package Tracking Systems",
+  //   "Delivery Method Comparison",
+  //   "Cross-Border Shipping Compliance",
+    
+  //   // Technical and Digital Services
+  //   "Digital Document Scanning",
+  //   "Mail Scanning Technology",
+  //   "Cloud-Based Mail Management",
+  //   "24/7 Online Mail Access",
+  //   "Automated Mail Processing",
+  //   "Mobile App Mail Management",
+  //   "Real-Time Mail Notifications",
+  //   "Secure Document Storage",
+  //   "Digital Archive Management",
+  //   "Mail Privacy Protection"
+  // ],
+
   "knowsAbout": [
-    "Virtual Business Address",
-    "CMRA-Compliant Mailbox",
-    "Digital Mailbox with Physical Routing",
-    "Mail Forwarding",
-    "Package Management",
-    "LLC Business Address",
-    "Real Street Address for IRS/State",
-    "Form 1583 Notarization Support",
-    "LLC Business Registration",
-    "USPS Form 1583 Virtual Compliance",
-    "IRS Business Address Rules",
-    "Virtual Mailbox Legal Compliance",
-    "California Secretary of State Filing"
+    {
+      "@type": "Thing",
+      "name": "Virtual Business Address Solutions",
+      "description": "Comprehensive virtual mailbox services including CMRA-compliant mailbox services, digital mail management platform, real street address services, LLC business address registration, Form 1583 compliance and notarization, USPS commercial mail receiving, and professional business address services.",
+      "url": "https://www.postscanmail.com/services/virtual-business-address.html"
+    },
+    {
+      "@type": "Thing",
+      "name": "E-commerce and Dropshipping Solutions",
+      "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics.",
+      "url": "https://www.postscanmail.com/client-solutions/dropshipping.html"
+    },
+    {
+      "@type": "Thing",
+      "name": "International and Expat Services",
+      "description": "Comprehensive international mail forwarding and expat mail management including U.S. tax document handling, IRS correspondence management, Social Security mail services, banking correspondence for expats, immigration document reception, overseas relocation mail services, voter registration address services, Medicare and health insurance mail, and international banking address requirements.",
+      "url": "https://www.postscanmail.com/client-solutions/expats-international-users.html"
+    },
+    {
+      "@type": "Thing",
+      "name": "Registered Agent Services",
+      "description": "Professional corporate registered agent services including legal document reception, service of process management, business entity compliance, state registration requirements, corporate governance support, legal notice forwarding, business privacy protection, multi-state business registration, and LLC formation support.",
+      "url": "https://www.postscanmail.com/client-solutions/registered-agent.html"
+    },
+    {
+      "@type": "Thing",
+      "name": "Small Business Mail Solutions",
+      "description": "Tailored small business mail solutions including professional business image development, remote business operations support, freelancer mail management, solopreneur address services, business credit building support, commercial zone addressing, Google Business Profile addresses, professional email signatures, and business entity separation.",
+      "url": "https://www.postscanmail.com/client-solutions/virtual-mailbox-for-small-business.html"
+    },
+    {
+      "@type": "Thing",
+      "name": "Shipping and Logistics Services",
+      "description": "Advanced multi-carrier shipping solutions including international shipping rate calculation, package consolidation services, real-time shipping quotes, USPS/FedEx/UPS/DHL services, domestic and international delivery, shipping cost optimization, package tracking systems, delivery method comparison, and cross-border shipping compliance.",
+      "url": "https://www.postscanmail.com/services/package-forwarding.html"
+    },
+    {
+      "@type": "Thing",
+      "name": "Digital Mail Management Technology",
+      "description": "Cutting-edge digital document scanning and mail scanning technology featuring cloud-based mail management, 24/7 online mail access, automated mail processing, mobile app mail management, real-time mail notifications, secure document storage, digital archive management, and mail privacy protection.",
+      "url": "https://www.postscanmail.com/services/virtual-mailbox.html"
+    }
   ],
 
   "makesOffer": [
