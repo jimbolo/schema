@@ -4,14 +4,50 @@
 
 This document provides the complete Schema.org JSON-LD structured data implementation for PostScan Mail's Los Angeles virtual address and mailbox services. The schema follows the exact hierarchy and property order as implemented in the JSON-LD file, optimized for AI search engines and adhering to Schema.org best practices for maximum search visibility and ranking.
 
-> **Last Updated:** August 22, 2025  
+> **Last Updated:** August 24, 2025  
 > **Schema.org Version:** Latest (2024-2025 compatible)  
-> **Documentation Status:** Comprehensive - All properties documented
+> **Documentation Status:** Comprehensive - All properties documented with enhanced knowsAbout Thing objects  
+> **Recent Updates:** Enhanced knowsAbout with 8 structured Thing objects, verified Wikipedia URLs, enterprise service coverage
 
 ---
 
 ### Implementation Note
 > Remove "_comment" sections on live-site implementation
+
+---
+
+## Recent Schema Enhancements (August 2025)
+
+### Enhanced knowsAbout Implementation
+
+The schema has been significantly enhanced with a comprehensive `knowsAbout` property transformation:
+
+**Previous Implementation**: Simple text string array covering basic services  
+**Current Implementation**: Structured Thing objects with detailed descriptions and URLs
+
+### Key Improvements
+
+1. **Enterprise Service Coverage**: Added dedicated "Enterprise Digital Mailroom Solutions" Thing object covering SOC 2 and HIPAA compliance, high-volume processing, and enterprise pricing tiers ($100-$600/month)
+
+2. **Enhanced Service Descriptions**: Each Thing object now includes comprehensive service details, pricing information, and specific feature coverage based on detailed service page analysis
+
+3. **URL Verification**: All Wikipedia URLs in the areaServed property have been verified and confirmed working (11 URLs total)
+
+4. **Structured Knowledge Representation**: Migration from simple keywords to full Thing objects enables better AI understanding and search optimization
+
+### Schema Coverage Expansion
+
+The enhanced knowsAbout now covers:
+- Individual virtual mailbox services
+- Small business solutions  
+- E-commerce and dropshipping support
+- International and expat services
+- Registered agent compliance
+- Enterprise digital mailroom solutions
+- Advanced shipping and logistics
+- Digital mail management technology
+
+This comprehensive approach provides maximum coverage for both traditional SEO and emerging AI search technologies.
 
 ---
 
@@ -498,31 +534,78 @@ This document provides the complete Schema.org JSON-LD structured data implement
 
 ```json
 "knowsAbout": [
-  "Virtual Business Address",
-  "CMRA-Compliant Mailbox",
-  "Digital Mailbox with Physical Routing",
-  "Mail Forwarding",
-  "Package Management",
-  "LLC Business Address",
-  "Real Street Address for IRS/State",
-  "Form 1583 Notarization Support",
-  "LLC Business Registration",
-  "USPS Form 1583 Virtual Compliance",
-  "IRS Business Address Rules",
-  "Virtual Mailbox Legal Compliance",
-  "California Secretary of State Filing"
+  {
+    "@type": "Thing",
+    "name": "Virtual Business Address Solutions",
+    "description": "Comprehensive virtual mailbox services including CMRA-compliant mailbox services, digital mail management platform, real street address services, LLC business address registration, Form 1583 compliance and notarization, USPS commercial mail receiving, and professional business address services for individuals and businesses nationwide.",
+    "url": "https://www.postscanmail.com/services/virtual-business-address.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "E-commerce and Dropshipping Solutions",
+    "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics with secure storage starting at $0.10/pound/day.",
+    "url": "https://www.postscanmail.com/client-solutions/dropshipping.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "International and Expat Services",
+    "description": "Comprehensive international mail forwarding and expat mail management including U.S. tax document handling, IRS correspondence management, Social Security mail services, banking correspondence for expats, immigration document reception, overseas relocation mail services, voter registration address services, Medicare and health insurance mail, and international banking address requirements with global forwarding capabilities.",
+    "url": "https://www.postscanmail.com/client-solutions/expats-international-users.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "Registered Agent Services",
+    "description": "Professional corporate registered agent services including legal document reception, service of process management, business entity compliance, state registration requirements, corporate governance support, legal notice forwarding, business privacy protection, multi-state business registration, and LLC formation support with secure document handling and instant digital notifications.",
+    "url": "https://www.postscanmail.com/client-solutions/registered-agent.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "Small Business Mail Solutions",
+    "description": "Tailored small business mail solutions including professional business image development, remote business operations support, freelancer mail management, solopreneur address services, business credit building support, commercial zone addressing, Google Business Profile addresses, professional email signatures, business entity separation, and team collaboration features for growing businesses.",
+    "url": "https://www.postscanmail.com/client-solutions/virtual-mailbox-for-small-business.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "Enterprise Digital Mailroom Solutions",
+    "description": "SOC 2 and HIPAA compliant enterprise mailroom services including customized software development, high-volume mail processing (up to 3000 items/month), multi-user management (up to 30 recipients), tailored workflows for healthcare, finance, and legal industries, advanced encryption methods, rigorous access controls, and enterprise-level pricing tiers from $100-$600/month for scalable business solutions.",
+    "url": "https://www.postscanmail.com/client-solutions/digital-mailroom.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "Shipping and Logistics Services",
+    "description": "Advanced multi-carrier shipping solutions including international shipping rate calculation, package consolidation services, real-time shipping quotes, USPS/FedEx/UPS/DHL/ARAMEX services, domestic and international delivery, shipping cost optimization, package tracking systems, delivery method comparison, cross-border shipping compliance, and competitive shipping fees with exclusive deals and holiday pricing protection.",
+    "url": "https://www.postscanmail.com/services/package-forwarding.html"
+  },
+  {
+    "@type": "Thing",
+    "name": "Digital Mail Management Technology",
+    "description": "Cutting-edge digital document scanning and mail scanning technology featuring SOC 2 compliant AWS cloud hosting, 24/7 online mail access, automated mail processing, native iOS and Android mobile apps, real-time push notifications, secure document storage with advanced encryption, digital archive management, mail privacy protection, and mobile check deposit capabilities for comprehensive digital mail management.",
+    "url": "https://www.postscanmail.com/services/virtual-mailbox.html"
+  }
 ]
 ```
 
-**Purpose**: Keywords and expertise areas for topical relevance and AI understanding  
+**Purpose**: Enhanced knowledge representation using structured Thing objects for comprehensive service coverage  
 **Schema.org Rules**:
-- Array of text strings describing business knowledge areas
-- Should match actual service capabilities and website content
-- Helps AI understand business specializations and expertise
-- Critical for informational queries and expert system recognition
-- Optimizes for informational searches related to virtual address services
+- Array of Thing objects providing detailed knowledge area descriptions
+- Each Thing object includes name, description, and URL for specific service areas
+- Covers full spectrum from individual to enterprise solutions based on comprehensive service analysis
+- Structured approach enables better AI understanding of service expertise and capabilities
+- URLs link to specific service pages for enhanced topical authority
+- Critical for informational queries, expert system recognition, and topical clustering
+- Optimizes for both traditional SEO and AI search technologies
 
-**Reference**: [Schema.org knowsAbout](https://schema.org/knowsAbout)
+**Enhanced Coverage Areas**:
+1. **Virtual Business Address Solutions** - Core CMRA services and business registration
+2. **E-commerce and Dropshipping Solutions** - Specialized online retail support with pricing details
+3. **International and Expat Services** - Comprehensive expat mail management and global forwarding
+4. **Registered Agent Services** - Professional legal compliance and document processing
+5. **Small Business Mail Solutions** - SMB-focused services with growth support features
+6. **Enterprise Digital Mailroom Solutions** - SOC 2/HIPAA compliant enterprise services with volume tiers
+7. **Shipping and Logistics Services** - Multi-carrier solutions with competitive pricing features
+8. **Digital Mail Management Technology** - Advanced technology stack with security compliance
+
+**Reference**: [Schema.org knowsAbout](https://schema.org/knowsAbout) | [Schema.org Thing](https://schema.org/Thing)
 
 ### 9. Service Offerings (`makesOffer`)
 
@@ -1038,9 +1121,12 @@ The `makesOffer` property contains multiple service offerings, each structured a
 
 This comprehensive Schema.org implementation represents a complete approach to structured data markup for virtual address and mailbox services. The schema follows the exact hierarchy and property order of the implementation file, ensuring perfect documentation alignment with the actual code.
 
-The implementation is optimized for both traditional SEO and emerging AI search technologies, providing maximum visibility and ranking potential across all search platforms and voice assistants.
+**Major Enhancement (August 2025)**: The knowsAbout property has been transformed from simple keyword strings to comprehensive Thing objects, providing detailed service descriptions, URLs, and enhanced coverage from individual to enterprise solutions. This structured approach significantly improves AI understanding and search optimization capabilities.
 
-**Implementation Status**: Production-ready with comprehensive validation requirements
-**Last Updated**: August 22, 2025
-**Schema Compliance**: 100% Schema.org vocabulary compliant
-**Documentation Coverage**: Complete - All properties documented with Schema.org references
+The implementation is optimized for both traditional SEO and emerging AI search technologies, providing maximum visibility and ranking potential across all search platforms and voice assistants. The enhanced knowsAbout section now covers 8 comprehensive service areas with detailed descriptions and specific URLs for enhanced topical authority.
+
+**Implementation Status**: Production-ready with comprehensive validation requirements and enhanced knowledge representation  
+**Last Updated**: August 24, 2025  
+**Schema Compliance**: 100% Schema.org vocabulary compliant with structured Thing objects  
+**Documentation Coverage**: Complete - All properties documented with Schema.org references and enhanced service coverage  
+**Knowledge Representation**: 8 comprehensive Thing objects covering individual to enterprise solutions
