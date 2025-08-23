@@ -300,43 +300,49 @@
     {
       "@type": "Thing",
       "name": "Virtual Business Address Solutions",
-      "description": "Comprehensive virtual mailbox services including CMRA-compliant mailbox services, digital mail management platform, real street address services, LLC business address registration, Form 1583 compliance and notarization, USPS commercial mail receiving, and professional business address services.",
+      "description": "Comprehensive virtual mailbox services including CMRA-compliant mailbox services, digital mail management platform, real street address services, LLC business address registration, Form 1583 compliance and notarization, USPS commercial mail receiving, and professional business address services for individuals and businesses nationwide.",
       "url": "https://www.postscanmail.com/services/virtual-business-address.html"
     },
     {
       "@type": "Thing",
       "name": "E-commerce and Dropshipping Solutions",
-      "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics.",
+      "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics with secure storage starting at $0.10/pound/day.",
       "url": "https://www.postscanmail.com/client-solutions/dropshipping.html"
     },
     {
       "@type": "Thing",
       "name": "International and Expat Services",
-      "description": "Comprehensive international mail forwarding and expat mail management including U.S. tax document handling, IRS correspondence management, Social Security mail services, banking correspondence for expats, immigration document reception, overseas relocation mail services, voter registration address services, Medicare and health insurance mail, and international banking address requirements.",
+      "description": "Comprehensive international mail forwarding and expat mail management including U.S. tax document handling, IRS correspondence management, Social Security mail services, banking correspondence for expats, immigration document reception, overseas relocation mail services, voter registration address services, Medicare and health insurance mail, and international banking address requirements with global forwarding capabilities.",
       "url": "https://www.postscanmail.com/client-solutions/expats-international-users.html"
     },
     {
       "@type": "Thing",
       "name": "Registered Agent Services",
-      "description": "Professional corporate registered agent services including legal document reception, service of process management, business entity compliance, state registration requirements, corporate governance support, legal notice forwarding, business privacy protection, multi-state business registration, and LLC formation support.",
+      "description": "Professional corporate registered agent services including legal document reception, service of process management, business entity compliance, state registration requirements, corporate governance support, legal notice forwarding, business privacy protection, multi-state business registration, and LLC formation support with secure document handling and instant digital notifications.",
       "url": "https://www.postscanmail.com/client-solutions/registered-agent.html"
     },
     {
       "@type": "Thing",
       "name": "Small Business Mail Solutions",
-      "description": "Tailored small business mail solutions including professional business image development, remote business operations support, freelancer mail management, solopreneur address services, business credit building support, commercial zone addressing, Google Business Profile addresses, professional email signatures, and business entity separation.",
+      "description": "Tailored small business mail solutions including professional business image development, remote business operations support, freelancer mail management, solopreneur address services, business credit building support, commercial zone addressing, Google Business Profile addresses, professional email signatures, business entity separation, and team collaboration features for growing businesses.",
       "url": "https://www.postscanmail.com/client-solutions/virtual-mailbox-for-small-business.html"
     },
     {
       "@type": "Thing",
+      "name": "Enterprise Digital Mailroom Solutions",
+      "description": "SOC 2 and HIPAA compliant enterprise mailroom services including customized software development, high-volume mail processing (up to 3000 items/month), multi-user management (up to 30 recipients), tailored workflows for healthcare, finance, and legal industries, advanced encryption methods, rigorous access controls, and enterprise-level pricing tiers from $100-$600/month for scalable business solutions.",
+      "url": "https://www.postscanmail.com/client-solutions/digital-mailroom.html"
+    },
+    {
+      "@type": "Thing",
       "name": "Shipping and Logistics Services",
-      "description": "Advanced multi-carrier shipping solutions including international shipping rate calculation, package consolidation services, real-time shipping quotes, USPS/FedEx/UPS/DHL services, domestic and international delivery, shipping cost optimization, package tracking systems, delivery method comparison, and cross-border shipping compliance.",
+      "description": "Advanced multi-carrier shipping solutions including international shipping rate calculation, package consolidation services, real-time shipping quotes, USPS/FedEx/UPS/DHL/ARAMEX services, domestic and international delivery, shipping cost optimization, package tracking systems, delivery method comparison, cross-border shipping compliance, and competitive shipping fees with exclusive deals and holiday pricing protection.",
       "url": "https://www.postscanmail.com/services/package-forwarding.html"
     },
     {
       "@type": "Thing",
       "name": "Digital Mail Management Technology",
-      "description": "Cutting-edge digital document scanning and mail scanning technology featuring cloud-based mail management, 24/7 online mail access, automated mail processing, mobile app mail management, real-time mail notifications, secure document storage, digital archive management, and mail privacy protection.",
+      "description": "Cutting-edge digital document scanning and mail scanning technology featuring SOC 2 compliant AWS cloud hosting, 24/7 online mail access, automated mail processing, native iOS and Android mobile apps, real-time push notifications, secure document storage with advanced encryption, digital archive management, mail privacy protection, and mobile check deposit capabilities for comprehensive digital mail management.",
       "url": "https://www.postscanmail.com/services/virtual-mailbox.html"
     }
   ],
