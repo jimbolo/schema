@@ -24,6 +24,21 @@
     "addressCountry": "US"
   },
 
+   "member": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.bbb.org",
+      "name": "Better Business Bureau",
+      "url": "https://www.bbb.org"
+    },
+    {
+      "@type": "Organization", 
+      "@id": "https://www.usps.com",
+      "name": "United States Postal Service - CMRA Network",
+      "url": "https://www.usps.com"
+    }
+  ],
+
   "contactPoint": [
     {
       "@type": "ContactPoint",
