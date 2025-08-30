@@ -285,6 +285,11 @@
         "@type": "Service",
         "name": "Virtual Mailbox",
         "serviceType": "Virtual Mailbox for Anyone",
+          "provider": {
+            "@type": "Organization",
+            "@id": "https://www.postscanmail.com",
+            "name": "PostScan Mail"
+        },
         "serviceOutput": [
           {
             "@type": "DigitalDocument",
@@ -448,6 +453,11 @@
         "@type": "Service",
         "name": "Virtual Mailing Address for LLC",
         "serviceType": "Virtual Mailbox for small or large LLC businesses",
+          "provider": {
+            "@type": "Organization",
+            "@id": "https://www.postscanmail.com",
+            "name": "PostScan Mail"
+        },
         "serviceOutput": [
           {
             "@type": "DigitalDocument",
@@ -642,7 +652,13 @@
       "itemOffered": {
         "@type": "Service",
         "name": "Business Registration Agent Service",
+        "serviceType": "Registered Agent",
         "description": "Acting as official registered agent for business formation and compliance",
+          "provider": {
+            "@type": "Organization",
+            "@id": "https://www.postscanmail.com",
+            "name": "PostScan Mail"
+        },
         "serviceOutput": [
           {
             "@type": "GovernmentService",
