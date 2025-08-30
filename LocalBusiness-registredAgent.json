@@ -222,7 +222,7 @@
     {
       "@type": "Thing",
       "name": "E-commerce and Dropshipping Solutions",
-      "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics with secure storage starting at $0.10/pound/day.",
+      "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics with secure storage and package handling.",
       "url": "https://www.postscanmail.com/client-solutions/dropshipping.html"
     },
     {
@@ -477,7 +477,7 @@
           {
             "@type": "Product",
             "name": "Secure Business Storage Solutions",
-            "description": "Physical storage for business inventory, marketing materials, equipment, and documents. Flexible pricing starting at $0.10/pound/day after 7 free days. Perfect for seasonal inventory and business equipment."
+            "description": "Physical storage for business inventory, marketing materials, equipment, and documents. Flexible pricing perfect for seasonal inventory and business equipment."
           },
           {
             "@type": "ParcelDelivery",
@@ -524,7 +524,7 @@
           {
             "@type": "Audience", 
             "audienceType": "Financial Services and Investment Firms",
-            "description": "Financial advisors, investment firms, and financial consultants requiring secure document handling for client portfolios, regulatory compliance, and confidential financial correspondence. Access 24/7 postal mail management to view photos of sensitive financial documents instantly, with mail scanning & digital archive providing high-resolution scans and secure document storage accessible worldwide. Our CMRA-authorized facility ensures SEC and banking regulation compliance with virtual business address service for professional credibility, plus secure storage solutions for compliance documentation with flexible pricing starting at $0.10/pound/day after 7 free days."
+            "description": "Financial advisors, investment firms, and financial consultants requiring secure document handling for client portfolios, regulatory compliance, and confidential financial correspondence. Access 24/7 postal mail management to view photos of sensitive financial documents instantly, with mail scanning & digital archive providing high-resolution scans and secure document storage accessible worldwide. Our CMRA-authorized facility ensures SEC and banking regulation compliance with virtual business address service for professional credibility, plus secure storage solutions for compliance documentation with flexible pricing"
           },
           {
             "@type": "Audience",
