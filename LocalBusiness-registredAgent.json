@@ -8,13 +8,10 @@
   "url": "https://www.postscanmail.com/a/5101-santa-monica-blvd-ste-8.html",
   "image": "https://www.postscanmail.com/logo.png",
   "logo": "https://www.postscanmail.com/logo.png",
-  "description": "PostScan Mail in Los Angeles, CA provides CMRA-compliant virtual addresses, digital mailbox services, mail scanning, forwarding, and real street addresses accepted for LLC registration and IRS compliance. Perfect for small businesses, freelancers, and remote workers needing a professional business address.",
+  "description": "Need a professional virtual address in Los Angeles? PostScan Mail provides real street addresses (not PO Boxes) that work for business registration, LLC formation, and IRS compliance. Perfect for small businesses, freelancers, and remote workers who need a professional business presence without a physical office.",
+
   "telephone": "+18006245866",
   "email": "support@postscanmail.com",
-  "taxID": "",
-  "c": "",
-  "naics": "561499",
-  "iso6523Code": "",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "5101 Santa Monica Blvd Ste 8",
@@ -24,20 +21,6 @@
     "addressCountry": "US"
   },
 
-   "member": [
-    {
-      "@type": "Organization",
-      "@id": "https://www.bbb.org",
-      "name": "Better Business Bureau",
-      "url": "https://www.bbb.org"
-    },
-    {
-      "@type": "Organization", 
-      "@id": "https://www.usps.com",
-      "name": "United States Postal Service - CMRA Network",
-      "url": "https://www.usps.com"
-    }
-  ],
 
   "contactPoint": [
     {
@@ -91,6 +74,10 @@
     "@id": "https://www.postscanmail.com/a/5101-santa-monica-blvd-ste-8.html"
   },
 
+
+
+
+
   "parentOrganization": {
     "@type": "Organization",
     "url": "https://www.postscanmail.com",
@@ -108,12 +95,52 @@
       "addressRegion": "CA",
       "postalCode": "92801"
     },
+
     "taxID": "",
     "duns": "",
     "naics": "561499",
-    "leiCode": "",
-    "iso6523Code": ""
+    
+    "member": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.bbb.org",
+        "name": "Better Business Bureau",
+        "url": "https://www.bbb.org"
+      },
+      {
+        "@type": "Organization", 
+        "@id": "https://www.usps.com",
+        "name": "United States Postal Service - CMRA Network",
+        "url": "https://faq.usps.com/s/article/Commercial-Mail-Receiving-Agency-CMRA"
+      }
+    ],
+
+    "aggregateRating": {
+      "@type": "AggregateRating",
+        "name": "PostScan Mail Customer Reviews and Ratings",
+        "url": "https://www.shopperapproved.com/reviews/postscanmail.com",
+        "ratingValue": "4.8",
+        "reviewCount": "15384",
+        "bestRating": "5",
+        "worstRating": "1",
+        "itemReviewed": {
+          "@type": "Organization",
+          "@id": "https://www.postscanmail.com",
+          "name": "PostScan Mail"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "Shopper Approved",
+            "url": "https://www.shopperapproved.com"
+          }
+    },
+    "ownershipFundingInfo": "https://www.postscanmail.com/about.html",
+    "publishingPrinciples": "https://www.postscanmail.com/terms-of-use.html",
+    "ethicsPolicy": "https://www.postscanmail.com/privacy.html"
   },
+
+
+
 
   "areaServed": [
     {
@@ -227,53 +254,53 @@
   ],
 
 
-  "knowsAbout": [
+ "knowsAbout": [
     {
       "@type": "Thing",
       "name": "Virtual Business Address Solutions",
-      "description": "Comprehensive virtual mailbox services including CMRA-compliant mailbox services, digital mail management platform, real street address services, LLC business address registration, Form 1583 compliance and notarization, USPS commercial mail receiving, and professional business address services for individuals and businesses nationwide.",
+      "description": "Need a professional business address without renting office space? Our virtual mailbox gives your business a real street address that works for LLC registration, bank accounts, and official filings. Get CMRA-compliant services with digital mail management, Form 1583 processing, and USPS commercial receiving - all handled professionally so your business looks established from day one.",
       "url": "https://www.postscanmail.com/services/virtual-business-address.html"
     },
     {
-      "@type": "Thing",
+      "@type": "Thing", 
       "name": "E-commerce and Dropshipping Solutions",
-      "description": "Specialized e-commerce fulfillment services including dropshipping business support, multi-vendor return management, product return processing, inventory management for online stores, customer service automation support, cross-border e-commerce solutions, FBA Amazon address services, Shopify store mail management, and online marketplace logistics with secure storage and package handling.",
+      "description": "Running an online store but drowning in returns and vendor packages? We handle the messy parts - managing returns from multiple vendors, processing customer returns, storing inventory, and providing that crucial U.S. business address for your Amazon FBA or Shopify store. Cross-border shipping, package consolidation, everything an online business needs to run smoothly.",
       "url": "https://www.postscanmail.com/client-solutions/dropshipping.html"
     },
     {
       "@type": "Thing",
-      "name": "International and Expat Services",
-      "description": "Comprehensive international mail forwarding and expat mail management including U.S. tax document handling, IRS correspondence management, Social Security mail services, banking correspondence for expats, immigration document reception, overseas relocation mail services, voter registration address services, Medicare and health insurance mail, and international banking address requirements with global forwarding capabilities.",
+      "name": "International and Expat Services", 
+      "description": "Living abroad but need to stay connected to your U.S. life? We're your American address for everything important - tax documents from the IRS, Social Security checks, Medicare correspondence, and banking mail. Voter registration, immigration paperwork, insurance claims - we forward everything globally or scan it immediately so nothing gets lost while overseas.",
       "url": "https://www.postscanmail.com/client-solutions/expats-international-users.html"
     },
     {
       "@type": "Thing",
       "name": "Registered Agent Services",
-      "description": "Professional corporate registered agent services including legal document reception, service of process management, business entity compliance, state registration requirements, corporate governance support, legal notice forwarding, business privacy protection, multi-state business registration, and LLC formation support with secure document handling and instant digital notifications.",
+      "description": "Starting an LLC or corporation and need someone to receive legal documents? We serve as your official registered agent, handling lawsuits, subpoenas, and state notices professionally. Multi-state business registration, legal compliance, privacy protection - all with instant digital notifications when something important arrives that needs immediate attention.",
       "url": "https://www.postscanmail.com/client-solutions/registered-agent.html"
     },
     {
       "@type": "Thing",
       "name": "Small Business Mail Solutions",
-      "description": "Tailored small business mail solutions including professional business image development, remote business operations support, freelancer mail management, solopreneur address services, business credit building support, commercial zone addressing, Google Business Profile addresses, professional email signatures, business entity separation, and team collaboration features for growing businesses.",
+      "description": "Small business owner tired of using your home address everywhere? Get a professional image with real street addresses in prime business locations. Perfect for freelancers, solopreneurs, and growing teams who need credible addresses for Google Business profiles, business cards, and building commercial credit without expensive office leases.",
       "url": "https://www.postscanmail.com/client-solutions/virtual-mailbox-for-small-business.html"
     },
     {
       "@type": "Thing",
       "name": "Enterprise Digital Mailroom Solutions",
-      "description": "SOC 2 and HIPAA compliant enterprise mailroom services including customized software development, high-volume mail processing (up to 3000 items/month), multi-user management (up to 30 recipients), tailored workflows for healthcare, finance, and legal industries, advanced encryption methods, rigorous access controls, and enterprise-level pricing tiers from $100-$600/month for scalable business solutions.",
+      "description": "Enterprise handling thousands of mail pieces monthly? Our SOC 2 and HIPAA compliant digital mailroom processes up to 3,000 items with custom workflows for healthcare, finance, and legal industries. Support up to 30 users, advanced encryption, rigorous access controls - enterprise pricing from $100-$600/month scales with your volume.",
       "url": "https://www.postscanmail.com/client-solutions/digital-mailroom.html"
     },
     {
       "@type": "Thing",
       "name": "Shipping and Logistics Services",
-      "description": "Advanced multi-carrier shipping solutions including international shipping rate calculation, package consolidation services, real-time shipping quotes, USPS/FedEx/UPS/DHL/ARAMEX services, domestic and international delivery, shipping cost optimization, package tracking systems, delivery method comparison, cross-border shipping compliance, and competitive shipping fees with exclusive deals and holiday pricing protection.",
+      "description": "Tired of expensive shipping costs eating your profits? We provide real-time quotes from USPS, FedEx, UPS, DHL, and ARAMEX so each package gets the best rate. Package consolidation saves money, international shipping compliance handled, holiday pricing protection - everything needed to optimize shipping costs and delivery reliability.",
       "url": "https://www.postscanmail.com/services/package-forwarding.html"
     },
     {
       "@type": "Thing",
       "name": "Digital Mail Management Technology",
-      "description": "Cutting-edge digital document scanning and mail scanning technology featuring SOC 2 compliant AWS cloud hosting, 24/7 online mail access, automated mail processing, native iOS and Android mobile apps, real-time push notifications, secure document storage with advanced encryption, digital archive management, mail privacy protection, and mobile check deposit capabilities for comprehensive digital mail management.",
+      "description": "Want your mail completely digital and accessible anywhere? Our SOC 2 compliant platform runs on AWS with 24/7 access, automated processing, and native mobile apps for iOS and Android. Real-time notifications, advanced encryption, digital archives, even mobile check deposit - comprehensive digital mail management from your pocket.",
       "url": "https://www.postscanmail.com/services/virtual-mailbox.html"
     }
   ],
@@ -293,53 +320,63 @@
         "serviceOutput": [
           {
             "@type": "DigitalDocument",
-            "name": "24/7 Personal Mail Management",
-            "description": "Access your personal mailbox anytime, anywhere. View photos of mail and packages instantly, decide to open and scan contents, forward to any address, or securely shred unwanted mail - all from your smartphone or computer."
+            "name": "Can I Access My Mail Anytime?",
+            "description": "Yes! You can access your personal mailbox anytime, anywhere. View photos of mail and packages instantly, decide to open and scan contents, forward to any address, or securely shred unwanted mail - all from your smartphone or computer."
           },
           {
             "@type": "Service",
-            "name": "Real Street Address for Personal Use",
-            "description": "Get a real U.S. street address (not a PO Box) for personal mail, online shopping, subscriptions, and services. Perfect for apartment dwellers, frequent movers, travelers, and privacy protection."
+            "name": "Why Do I Need a Real Street Address?",
+            "description": "You get a real U.S. street address (not a PO Box) that you can use for personal mail, online shopping, subscriptions, and services. Perfect when you're living in an apartment, moving frequently, traveling often, or want to keep your home address private."
           },
           {
             "@type": "ParcelDelivery",
-            "name": "Personal Package Receiving and Forwarding",
-            "description": "Receive packages from all carriers (USPS, UPS, FedEx, DHL) at your virtual address. Forward to your current location worldwide, consolidate multiple packages to save shipping costs, or hold for pickup."
+            "name": "How Do I Receive Packages?",
+            "description": "You can receive packages from all carriers - USPS, UPS, FedEx, DHL - right at your virtual address. Then you choose: forward them to wherever you are in the world, combine multiple packages to save on shipping, or hold them for pickup whenever it's convenient for you."
           },
           {
             "@type": "DigitalDocument",
-            "name": "Personal Document Scanning and Storage",
-            "description": "High-resolution scanning of important personal mail like tax documents, insurance papers, bank statements, and government notices. Secure cloud storage accessible from anywhere with instant email alerts."
+            "name": "Need Digital Copies of Your Important Mail?",
+            "description": "You never have to worry about losing important documents again. We scan your tax papers, insurance forms, bank statements, and government mail in high resolution. You can view them from anywhere and get instant notifications when something critical arrives."
           },
           {
             "@type": "Service",
-            "name": "Privacy Protection Service",
-            "description": "Keep your home address private while receiving mail and packages. Perfect for online shopping, dating apps, freelance work, or any situation where you don't want to share your personal address."
+            "name": "Want to Keep Your Home Address Private?",
+            "description": "You can keep your personal address completely secret while still receiving all your mail and packages. Perfect when you're shopping online, using dating apps, doing freelance work, or any time you don't want strangers knowing where you live."
           },
           {
             "@type": "Service",
-            "name": "Travel and Remote Living Support",
-            "description": "Maintain a permanent U.S. address while traveling, living abroad, or moving frequently. Receive mail forwarding for important documents, subscriptions, and government correspondence wherever you are."
+            "name": "Need a U.S. Address While Living Elsewhere?",
+            "description": "You can keep a permanent U.S. address no matter where you are in the world. Whether you're traveling constantly, living abroad, or moving frequently, we forward your important documents, subscriptions, and government mail to wherever you are right now."
           },
           {
             "@type": "ParcelDelivery",
-            "name": "Online Shopping Package Management",
-            "description": "Shop from any U.S. retailer and have purchases sent to your virtual address. Package consolidation, international shipping, and secure storage. Never miss a delivery or worry about package theft again."
+            "name": "Want to Shop Online Without Delivery Problems?",
+            "description": "You can shop from any U.S. retailer and send everything to your virtual address. We combine multiple packages to save you money, ship internationally, and store everything securely. No more missed deliveries or stolen packages from your doorstep."
           },
           {
             "@type": "Product",
-            "name": "Personal Storage Solutions",
-            "description": "Secure storage for personal belongings, seasonal items, important documents, and packages. Flexible short-term or long-term storage with 7 days free, then $0.10 per pound per day."
+            "name": "Where to Find Personal Short-Term Storage?",
+            "description": "You can secure storage for personal belongings, seasonal items, important documents, and packages. Flexible short-term or long-term storage."
           },
           {
             "@type": "Service",
-            "name": "Subscription and Service Management",
-            "description": "Use your virtual address for magazine subscriptions, streaming services, financial accounts, and online services. Maintain continuity when moving or traveling without address change hassles."
+            "name": "Tired of Changing Your Address?",
+            "description": "You can use your virtual address for magazine subscriptions, streaming services, bank accounts, and online services. When you move or travel, everything keeps coming to the same address - no more address change headaches."
           },
           {
             "@type": "DigitalDocument",
-            "name": "Important Mail Alert System",
-            "description": "Never miss critical personal mail. Instant notifications for tax documents, legal notices, insurance communications, and government mail. Review, forward, or archive with one click."
+            "name": "How Do You Know When Critical Mail Arrives?",
+            "description": "You get instant notifications the moment important mail shows up - tax documents, legal notices, insurance letters, government correspondence. Then you can review it, forward it, or file it away with just one click."
+          },
+          {
+            "@type": "ParcelDelivery",
+            "name": "Want to Consolidate Multiple Packages?",
+            "description": "You can save money by having us combine multiple packages into one shipment. We'll hold your packages, repack them together, and send everything in one box to save you on shipping costs - especially helpful for international shipping."
+          },
+          {
+            "@type": "Service",
+            "name": "Tired of Dealing with Junk Mail?",
+            "description": "You can set up smart filters that automatically sort your mail before you even see it. Block specific senders, automatically recycle junk mail, or set certain mail to forward directly to another address - all without you having to lift a finger."
           }
         ],
 
@@ -350,7 +387,7 @@
           {
             "@type": "Audience",
             "audienceType": "Individuals and Personal Mail Users",
-            "description": "Personal consumers needing comprehensive virtual mailbox solutions with real street addresses for online shopping, subscriptions, and personal correspondence. Access your mailbox 24/7 through our cloud-based platform, view scanned mail photos instantly, and choose to open-and-scan, forward worldwide, or securely shred unwanted items. Perfect for apartment dwellers avoiding package theft, frequent movers maintaining address continuity, and privacy-conscious individuals."
+            "description": "Personal consumers needing comprehensive virtual mailbox solutions with real street addresses for online shopping, subscriptions, and personal correspondence. You can access your mailbox 24/7 through our cloud-based platform, view scanned mail photos instantly, and choose to open-and-scan, forward worldwide, or securely shred unwanted items. Perfect for apartment dwellers avoiding package theft, frequent movers maintaining address continuity, and privacy-conscious individuals."
           },
           {
             "@type": "Audience",
@@ -462,17 +499,12 @@
           {
             "@type": "DigitalDocument",
             "name": "24/7 Postal Mail Management",
-            "description": "You can access your mailbox 24/7 and see photos of envelopes and packages. You're always in control, decide when to open and scan emails and when to forward, shred or recycle them."
+            "description": "You can access your mailbox 24/7 and see photos of envelopes and packages. You're always in control and can decide when to open and scan mail and when to forward, shred or recycle them."
           },
           {
             "@type": "Service",
             "name": "Run Your Online Business",
-            "description": "Run Your Online Business without a Permanent Address. PostScan Mail frees you from the hassle of paper processing, allowing you to manage your mail and packages online just as efficiently as you manage your business."
-          },
-          {
-            "@type": "DigitalDocument",
-            "name": "24/7 Digital Mail Management",
-            "description": "You can access your mailbox 24/7 and see photos of envelopes and packages. You're always in control, decide when to open and scan emails and when to forward, shred or recycle them."
+            "description": "You can run your online business without a permanent address. PostScan Mail frees you from the hassles of paper processing, allowing you to manage your mail and packages online just as efficiently as you manage your business."
           },
           {
             "@type": "Service",
@@ -492,7 +524,7 @@
           {
             "@type": "Service",
             "name": "International Expat Mail Services",
-            "description": "Permanent U.S. mailing address for expats with global mail forwarding, banking correspondence, IRS notices, and Social Security checks management."
+            "description": "Permanent U.S. mailing address for expats with global mail forwarding, banking correspondence, IRS notices, and Social Security check management."
           },
           {
             "@type": "Service",
@@ -525,6 +557,9 @@
             "description": "Handle customer returns, vendor shipments, and inventory management. Specialized support for Amazon FBA, Shopify stores, and dropshipping operations with package inspection and forwarding services."
           }
         ],
+
+
+        
         "audience": [
           {
             "@type": "Audience",
